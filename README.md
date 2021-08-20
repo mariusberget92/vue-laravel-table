@@ -24,7 +24,7 @@ See example setup section for code examples.
 
     <body>
         <div id="app">
-            <vue-table 
+            <vue-laravel-table 
                 name="users"
                 data-route="api.users"
                 :limit="{ take: 25 }"
@@ -54,11 +54,11 @@ See example setup section for code examples.
 // app.js
 import axios from 'axios'
 import { createApp } from 'vue'
-import VueTable from './Components/Table/Table'
+import VueLaravelTable from 'vue-laravel-table'
 
 const app = createApp({
     components: {
-        VueTable
+        VueLaravelTable
     }
 });
 
