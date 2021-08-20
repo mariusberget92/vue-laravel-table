@@ -1,14 +1,14 @@
 # Vue Laravel Table
-This is a pretty straight forward component to use for Laravel projects.
-It is only a single component that will render a table with pagination, limit, search and other stuff from a paginated model object. 
+This is a pretty straight forward component to use for Laravel projects.<br>
+It is only a single component that will render a table with pagination, limit, search and other stuff from a paginated model object.<br>
 There are no CSS/SCSS included, this you can customize yourself in your own CSS files.
 
 ### Preparations
-You need to have Vue installed and be able to register the component.
-You need to grab [Ziggy](https://github.com/tighten/ziggy) be able to use route names with Vue.
-You need to setup CSRF to work with Vue.
-You need to name your route where you grab the data.
-See example setup section for code examples. 
+You need to have Vue installed and be able to register the component.<br>
+You need to grab [Ziggy](https://github.com/tighten/ziggy) be able to use route names with Vue.<br>
+You need to setup CSRF to work with Vue.<br>
+You need to name your route where you grab the data.<br>
+See example setup section for code examples.<br>
 
 ### Installation
 `npm install git+https://github.com/kaizokupuffball/vue-laravel-table.git`
@@ -146,12 +146,12 @@ class UserController extends Controller
 ```
 
 ### Options
-`name` should be a string wich will be used to identify the table with a class.
-`data-route` should be a route name where you want to fetch the data.
-`:crud-routes` should be a object that contains objects. See example. 
-`:headers` should be and array of objects. See example.
-`:limit` this is being reworked!
-`notificationTimeout` this is how long the deletion notifications will be displayed in ms. It is optional, default value is set to 500ms.
+`name` should be a string wich will be used to identify the table with a class.<br>
+`data-route` should be a route name where you want to fetch the data.<br>
+`:crud-routes` should be a object that contains objects. See example.<br>
+`:headers` should be and array of objects. See example.<br>
+`:limit` this is being reworked!<br>
+`notificationTimeout` this is how long the deletion notifications will be displayed in ms. It is optional, default value is set to 500ms.<br>
 
 ### Rendered
 If everything is setup correctly it should look something like this.
