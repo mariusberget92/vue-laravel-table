@@ -81,6 +81,7 @@
         </table>
 
         <div v-if="tableData.length > 0 && show.includes('pagination')" class="pagination-container">
+            <p class="pagination-status">Results: {{ paginationStatus.from }} - {{ paginationStatus.to }} of {{ paginationStatus.total }}</p>
             <ul class="pagination">
                 <template v-for="(link, linkIndex) in paginationData" :key="linkIndex">
                     <li class="pagepagination-item" :class="{ disabled: link.url == null, active: link.active }">
@@ -187,6 +188,9 @@ export default {
 
             // Pagination data
             paginationData: {},
+
+            // Pagination status
+            paginationStatus: {},
 
             // Loading state
             loading: false,
@@ -333,6 +337,11 @@ export default {
             .then(response => {
                 this.tableData = response.data.data;
                 this.paginationData = response.data.links;
+                this.paginationStatus = { 
+                    to: response.data.to,
+                    from: response.data.from,
+                    total: response.data.total
+                };
                 this.loading = false;
             })
             .catch((error) => {
