@@ -1,14 +1,14 @@
 # Vue Laravel Table
-This is a pretty straight forward component to use for Laravel projects.<br>
-It is only a single component that will render a table with pagination, limit, search and other stuff from a paginated model object.<br>
+This is a pretty straight forward component to use for Laravel projects.\
+It is only a single component that will render a table with pagination, limit, search and other stuff from a paginated model object.\
 There are no CSS/SCSS included, this you can customize yourself in your own CSS files.
 
 ### Preparations
-You need to have Vue installed and be able to register the component.<br>
-You need to grab [Ziggy](https://github.com/tighten/ziggy) be able to use route names with Vue.<br>
-You need to setup CSRF to work with Vue.<br>
-You need to name your route where you grab the data.<br>
-See example setup section for code examples.<br>
+You need to have Vue installed and be able to register the component.\
+You need to grab [Ziggy](https://github.com/tighten/ziggy) be able to use route names with Vue.\
+You need to setup CSRF to work with Vue.\
+You need to name your route(s) where you grab the data and you do CRUD stuff.\
+See example setup section for code examples.\
 
 ### Installation
 `npm install git+https://github.com/kaizokupuffball/vue-laravel-table.git`
@@ -26,18 +26,21 @@ See example setup section for code examples.<br>
         <div id="app">
             <vue-laravel-table 
                 name="users"
-                data-route="api.users"
-                :limit="{ take: 25 }"
+                :results-per-page="25"
+                :results-per-page-options="[5, 10, 25, 50, 100, 250, 500, 1000]"
                 :headers="[
                     { display: 'ID', column: 'id', orderable: true, searchable: false },
                     { display: 'Name', column: 'name', orderable: true, searchable: true },
                     { display: 'E-mail', column: 'email', orderable: false, searchable: true }
                 ]"
-                :crud-routes="{
-                    create: { name: 'users.create', icon: 'fas fa-plus' },
-                    show: { name: 'users.show', icon: 'fas fa-eye' },
-                    edit: { name: 'users.edit', icon: 'fas fa-edit' },
-                    destroy: { name: 'users.destroy', icon: 'fas fa-trash', bulk: true }, 
+                :routes="{
+                    data: 'api.users', 
+                    crud: {
+                        create: { name: 'users.create', icon: 'fas fa-plus' },
+                        show: { name: 'users.show', icon: 'fas fa-eye' },
+                        edit: { name: 'users.edit', icon: 'fas fa-edit' },
+                        destroy: { name: 'users.destroy', icon: 'fas fa-trash', bulk: true }
+                    }
                 }"
             />
         </div>
@@ -146,12 +149,41 @@ class UserController extends Controller
 ```
 
 ### Options
-`name` should be a string wich will be used to identify the table with a class.<br>
-`data-route` should be a route name where you want to fetch the data.<br>
-`:crud-routes` should be a object that contains objects. See example.<br>
-`:headers` should be and array of objects. See example.<br>
-`:limit` this is being reworked!<br>
-`notificationTimeout` this is how long the deletion notifications will be displayed in ms. It is optional, default value is set to 500ms.<br>
+* `name`
+* * Required!
+* * String which will be used to identify the table with a class.
+
+
+* `:routes`
+* * Required!
+* * Object containing all route names and icons for CRUD routes (see example).
+
+
+* `:headers`
+* * Required! 
+* * Array of objects (see example). 
+* * Objects should contain a theese properties: display, column, orderable and searchable.
+
+
+* `:results-per-page`
+* * Not required!
+* * Number of rows to take.
+
+
+* `:results-per-page-options` 
+* * Not required!
+* * Array of numbers which are used to generate select options of how many rows to take.
+
+
+* `:show`
+* * Not required!
+* * Array. This only has 3 options (search, pagination, limit). All is shown by default. Place in array only what you want to show.
+
+
+* `:notificationTimeout`
+* * Not required!
+* * Number. How long deletion notifications will be displayed in ms. Default value is 500ms.
+
 
 ### Rendered
 If everything is setup correctly it should look something like this.

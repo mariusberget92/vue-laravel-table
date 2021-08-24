@@ -17261,32 +17261,36 @@ function commonjsRequire () {
 
 var _ = lodash;var script = {
   props: {
-    // Required table identifier
-    // .table-container will also have the class .table-name
+    /**
+     * Required table identifier
+     * .table-container will also have the class .table-name 
+     */
     name: {
       type: String,
       required: true
     },
-    // Route name for where we are getting
-    // the pagination data
-    dataRoute: {
-      type: String,
-      required: true
-    },
-    // CRUD routes (create, show, edit, destroy)
-    // Example: { create: 'data.create', show: 'data.show', icon: 'fas fa-user' }
-    // The above example will show a create button in the top, and a view button
-    // for each table row. If you have the routes edit, show and destroy included,
-    // remember they need to have icon classes! 
-    // Icon is optional for create route.
-    // Destroy route can also contain a boolean "bulk" field to enable checkboxes and
-    // buld deletion of rows
-    crudRoutes: {
+
+    /* 
+    * Routes (data route + CRUD routes)
+    * Example: :route="{
+    *   data: 'api.usres', 
+    *   crud: { 
+    *       create: 'data.create', 
+    *       show: 'data.show', 
+    *       icon: 'fas fa-user' 
+    *   }
+    * }"
+    * 
+    * The above example will show a create button in the top, and a view button
+    * for each table row. If you have the routes edit, show and destroy included,
+    * remember they need to have icon classes! 
+    * Icon is optional for create route.
+    * Destroy route can also contain a boolean "bulk" field to enable checkboxes and
+    * buld deletion of rows
+    */
+    routes: {
       type: Object,
-      required: false,
-      default: function _default() {
-        return {};
-      }
+      required: true
     },
     // All headers must be present with a corresponding
     // database column
@@ -17298,15 +17302,17 @@ var _ = lodash;var script = {
     },
     // How many rows to display at a time
     // Defaults to 25 is none is passed
-    limit: {
-      type: Object,
+    resultsPerPage: {
+      type: Number,
       required: false,
-      default: function _default() {
-        return {
-          show: [5, 10, 25, 50, 100, 250, 500, 1000],
-          take: 25
-        };
-      }
+      default: 25
+    },
+    // Select box for how many rows per page we want
+    // Has default value, not required
+    resultsPerPageOptions: {
+      type: Array,
+      required: false,
+      default: [5, 10, 25, 50, 100, 250, 500, 1000]
     },
     // Wich "modules" to show
     // Only 3 accepted values for now.
@@ -17354,7 +17360,7 @@ var _ = lodash;var script = {
       // in the mounted() method below
       searchable: [],
       // Limit model
-      take: this.limit.take,
+      limit: this.resultsPerPage,
       // Selected model
       selectedIds: [],
       // Notification (shown on deletion)
@@ -17387,20 +17393,9 @@ var _ = lodash;var script = {
       this.getResults();
     }, 300),
     // Update how many rows to show
-    take: function take() {
+    limit: function limit() {
       this.current = 1;
       this.getResults();
-    }
-  },
-  computed: {
-    showSearch: function showSearch(vm) {
-      return vm.searchable.length > 0 ? true : false;
-    },
-    limit: function limit(vm) {
-      var limit = {};
-      limit.show = vm.limit.show ? vm.limit.show : [5, 10, 25, 50, 100, 250, 500, 1000];
-      limit.take = vm.limit.take ? vm.limit.take : 25;
-      return limit;
     }
   },
   methods: {
@@ -17440,9 +17435,9 @@ var _ = lodash;var script = {
 
       this.loading = true; // Prepare the URL
 
-      var url = new URL(this.$route(this.dataRoute));
+      var url = new URL(this.$route(this.routes.data));
       url.searchParams.set('page', this.current);
-      url.searchParams.set('limit', this.take); // Add order parameters if they exist
+      url.searchParams.set('limit', this.limit); // Add order parameters if they exist
 
       if (this.query.order || this.query.direction) {
         url.searchParams.set('sortBy', this.query.order);
@@ -17484,7 +17479,7 @@ var _ = lodash;var script = {
       }).join() : model; // Confirm action
 
       if (confirm(confirmText)) {
-        this.$axios.post(this.$route(this.crudRoutes.destroy.name, model), {
+        this.$axios.post(this.$route(this.routes.crud.destroy.name, model), {
           _method: 'DELETE'
         }).then(function (response) {
           // Reset selected rows to an empty array
@@ -17581,12 +17576,12 @@ var _hoisted_28 = {
 };
 var _hoisted_29 = ["data-href", "innerHTML", "onClick"];
 function render(_ctx, _cache, $props, $setup, $data, $options) {
-  var _$props$crudRoutes,
-      _$props$crudRoutes$de,
-      _$props$crudRoutes2,
-      _$props$crudRoutes2$d,
-      _$props$crudRoutes3,
-      _$props$crudRoutes3$d,
+  var _$props$routes$crud,
+      _$props$routes$crud$d,
+      _$props$routes$crud2,
+      _$props$routes$crud2$,
+      _$props$routes$crud3,
+      _$props$routes$crud3$,
       _this = this;
 
   return vue.openBlock(), vue.createElementBlock(vue.Fragment, null, [_ctx.notification.display == true ? (vue.openBlock(), vue.createElementBlock("div", {
@@ -17594,11 +17589,11 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     class: vue.normalizeClass(["notification", _ctx.notification.class])
   }, [vue.createElementVNode("p", _hoisted_1, vue.toDisplayString(_ctx.notification.message), 1)], 2)) : vue.createCommentVNode("", true), vue.createElementVNode("div", {
     class: vue.normalizeClass([$props.name, "table-container"])
-  }, [vue.createElementVNode("div", _hoisted_2, [$props.crudRoutes.create ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_3, [vue.createElementVNode("a", {
-    href: this.$route($props.crudRoutes.create.name)
-  }, [$props.crudRoutes.create.icon ? (vue.openBlock(), vue.createElementBlock("i", {
+  }, [vue.createElementVNode("div", _hoisted_2, [$props.routes.crud.create ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_3, [vue.createElementVNode("a", {
+    href: this.$route($props.routes.crud.create.name)
+  }, [$props.routes.crud.create.icon ? (vue.openBlock(), vue.createElementBlock("i", {
     key: 0,
-    class: vue.normalizeClass($props.crudRoutes.create.icon)
+    class: vue.normalizeClass($props.routes.crud.create.icon)
   }, null, 2)) : vue.createCommentVNode("", true), _hoisted_5], 8, _hoisted_4)])) : vue.createCommentVNode("", true), _ctx.searchable.length > 0 && $props.show.includes('search') ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_6, [vue.withDirectives(vue.createElementVNode("input", {
     "onUpdate:modelValue": _cache[0] || (_cache[0] = function ($event) {
       return _ctx.query.q = $event;
@@ -17607,15 +17602,15 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     placeholder: "Search..."
   }, null, 512), [[vue.vModelText, _ctx.query.q]])])) : vue.createCommentVNode("", true), $props.show.includes('limit') ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_7, [vue.withDirectives(vue.createElementVNode("select", {
     "onUpdate:modelValue": _cache[1] || (_cache[1] = function ($event) {
-      return _ctx.take = $event;
+      return _ctx.limit = $event;
     }),
     class: "custom-select"
-  }, [(vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList($options.limit.show, function (value) {
+  }, [(vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList($props.resultsPerPageOptions, function (value) {
     return vue.openBlock(), vue.createElementBlock("option", {
       key: value,
       value: value
     }, vue.toDisplayString(value), 9, _hoisted_8);
-  }), 128))], 512), [[vue.vModelSelect, _ctx.take]])])) : vue.createCommentVNode("", true), (_$props$crudRoutes = $props.crudRoutes) !== null && _$props$crudRoutes !== void 0 && (_$props$crudRoutes$de = _$props$crudRoutes.destroy) !== null && _$props$crudRoutes$de !== void 0 && _$props$crudRoutes$de.bulk ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_9, [vue.createElementVNode("form", {
+  }), 128))], 512), [[vue.vModelSelect, _ctx.limit]])])) : vue.createCommentVNode("", true), (_$props$routes$crud = $props.routes.crud) !== null && _$props$routes$crud !== void 0 && (_$props$routes$crud$d = _$props$routes$crud.destroy) !== null && _$props$routes$crud$d !== void 0 && _$props$routes$crud$d.bulk ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_9, [vue.createElementVNode("form", {
     onSubmit: _cache[2] || (_cache[2] = function ($event) {
       return $options.destroy($event, _ctx.selectedIds);
     })
@@ -17625,7 +17620,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     class: vue.normalizeClass({
       disabled: _ctx.selectedIds.length <= 0
     })
-  }, "Delete selected", 10, _hoisted_10)], 32)])) : vue.createCommentVNode("", true)]), vue.createElementVNode("table", _hoisted_11, [vue.createElementVNode("thead", null, [vue.createElementVNode("tr", null, [(_$props$crudRoutes2 = $props.crudRoutes) !== null && _$props$crudRoutes2 !== void 0 && (_$props$crudRoutes2$d = _$props$crudRoutes2.destroy) !== null && _$props$crudRoutes2$d !== void 0 && _$props$crudRoutes2$d.bulk ? (vue.openBlock(), vue.createElementBlock("th", _hoisted_12)) : vue.createCommentVNode("", true), (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList($props.headers, function (header, headerIndex) {
+  }, "Delete selected", 10, _hoisted_10)], 32)])) : vue.createCommentVNode("", true)]), vue.createElementVNode("table", _hoisted_11, [vue.createElementVNode("thead", null, [vue.createElementVNode("tr", null, [(_$props$routes$crud2 = $props.routes.crud) !== null && _$props$routes$crud2 !== void 0 && (_$props$routes$crud2$ = _$props$routes$crud2.destroy) !== null && _$props$routes$crud2$ !== void 0 && _$props$routes$crud2$.bulk ? (vue.openBlock(), vue.createElementBlock("th", _hoisted_12)) : vue.createCommentVNode("", true), (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList($props.headers, function (header, headerIndex) {
     return vue.openBlock(), vue.createElementBlock("th", {
       key: headerIndex
     }, [header.orderable ? (vue.openBlock(), vue.createElementBlock("a", {
@@ -17641,24 +17636,24 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     }, vue.toDisplayString(header.display), 11, _hoisted_13)) : (vue.openBlock(), vue.createElementBlock(vue.Fragment, {
       key: 1
     }, [vue.createTextVNode(vue.toDisplayString(header.display), 1)], 64))]);
-  }), 128)), $props.crudRoutes ? (vue.openBlock(), vue.createElementBlock("th", _hoisted_14, "Actions")) : vue.createCommentVNode("", true)])]), vue.createElementVNode("tbody", {
+  }), 128)), $props.routes.crud ? (vue.openBlock(), vue.createElementBlock("th", _hoisted_14, "Actions")) : vue.createCommentVNode("", true)])]), vue.createElementVNode("tbody", {
     class: vue.normalizeClass({
       loading: _ctx.loading
     })
-  }, [_ctx.tableData.length <= 0 ? (vue.openBlock(), vue.createElementBlock("tr", _hoisted_15, [(_$props$crudRoutes3 = $props.crudRoutes) !== null && _$props$crudRoutes3 !== void 0 && (_$props$crudRoutes3$d = _$props$crudRoutes3.destroy) !== null && _$props$crudRoutes3$d !== void 0 && _$props$crudRoutes3$d.bulk ? (vue.openBlock(), vue.createElementBlock("td", _hoisted_16)) : vue.createCommentVNode("", true), (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList($props.headers, function (header, headerIndex) {
+  }, [_ctx.tableData.length <= 0 ? (vue.openBlock(), vue.createElementBlock("tr", _hoisted_15, [(_$props$routes$crud3 = $props.routes.crud) !== null && _$props$routes$crud3 !== void 0 && (_$props$routes$crud3$ = _$props$routes$crud3.destroy) !== null && _$props$routes$crud3$ !== void 0 && _$props$routes$crud3$.bulk ? (vue.openBlock(), vue.createElementBlock("td", _hoisted_16)) : vue.createCommentVNode("", true), (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList($props.headers, function (header, headerIndex) {
     return vue.openBlock(), vue.createElementBlock("td", {
       key: headerIndex
     }, [headerIndex == 0 ? (vue.openBlock(), vue.createElementBlock(vue.Fragment, {
       key: 0
     }, [_hoisted_17], 64)) : vue.createCommentVNode("", true)]);
-  }), 128)), $props.crudRoutes ? (vue.openBlock(), vue.createElementBlock("td", _hoisted_18)) : vue.createCommentVNode("", true)])) : (vue.openBlock(true), vue.createElementBlock(vue.Fragment, {
+  }), 128)), $props.routes.crud ? (vue.openBlock(), vue.createElementBlock("td", _hoisted_18)) : vue.createCommentVNode("", true)])) : (vue.openBlock(true), vue.createElementBlock(vue.Fragment, {
     key: 1
   }, vue.renderList(_ctx.tableData, function (row, rowIndex) {
-    var _$props$crudRoutes4, _$props$crudRoutes4$d;
+    var _$props$routes$crud4, _$props$routes$crud4$;
 
     return vue.openBlock(), vue.createElementBlock("tr", {
       key: rowIndex
-    }, [(_$props$crudRoutes4 = $props.crudRoutes) !== null && _$props$crudRoutes4 !== void 0 && (_$props$crudRoutes4$d = _$props$crudRoutes4.destroy) !== null && _$props$crudRoutes4$d !== void 0 && _$props$crudRoutes4$d.bulk ? (vue.openBlock(), vue.createElementBlock("td", _hoisted_19, [vue.withDirectives(vue.createElementVNode("input", {
+    }, [(_$props$routes$crud4 = $props.routes.crud) !== null && _$props$routes$crud4 !== void 0 && (_$props$routes$crud4$ = _$props$routes$crud4.destroy) !== null && _$props$routes$crud4$ !== void 0 && _$props$routes$crud4$.bulk ? (vue.openBlock(), vue.createElementBlock("td", _hoisted_19, [vue.withDirectives(vue.createElementVNode("input", {
       type: "checkbox",
       value: row.id,
       "onUpdate:modelValue": _cache[3] || (_cache[3] = function ($event) {
@@ -17668,26 +17663,26 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       return vue.openBlock(), vue.createElementBlock("td", {
         key: column
       }, vue.toDisplayString(columnData), 1);
-    }), 128)), $props.crudRoutes ? (vue.openBlock(), vue.createElementBlock("td", _hoisted_21, [$props.crudRoutes.show ? (vue.openBlock(), vue.createElementBlock("a", {
+    }), 128)), $props.routes.crud ? (vue.openBlock(), vue.createElementBlock("td", _hoisted_21, [$props.routes.crud.show ? (vue.openBlock(), vue.createElementBlock("a", {
       key: 0,
-      href: _this.$route($props.crudRoutes.show.name, row.id),
+      href: _this.$route($props.routes.crud.show.name, row.id),
       class: "row-action row-action-show"
     }, [vue.createElementVNode("i", {
-      class: vue.normalizeClass($props.crudRoutes.show.icon)
-    }, null, 2)], 8, _hoisted_22)) : vue.createCommentVNode("", true), $props.crudRoutes.edit ? (vue.openBlock(), vue.createElementBlock("a", {
+      class: vue.normalizeClass($props.routes.crud.show.icon)
+    }, null, 2)], 8, _hoisted_22)) : vue.createCommentVNode("", true), $props.routes.crud.edit ? (vue.openBlock(), vue.createElementBlock("a", {
       key: 1,
-      href: _this.$route($props.crudRoutes.edit.name, row.id),
+      href: _this.$route($props.routes.crud.edit.name, row.id),
       class: "row-action row-action-edit"
     }, [vue.createElementVNode("i", {
-      class: vue.normalizeClass($props.crudRoutes.edit.icon)
-    }, null, 2)], 8, _hoisted_23)) : vue.createCommentVNode("", true), $props.crudRoutes.destroy.name ? (vue.openBlock(), vue.createElementBlock("form", {
+      class: vue.normalizeClass($props.routes.crud.edit.icon)
+    }, null, 2)], 8, _hoisted_23)) : vue.createCommentVNode("", true), $props.routes.crud.destroy.name ? (vue.openBlock(), vue.createElementBlock("form", {
       key: 2,
       onSubmit: function onSubmit($event) {
         return $options.destroy($event, row.id);
       },
       class: "row-action row-action-delete"
     }, [vue.createElementVNode("button", _hoisted_25, [vue.createElementVNode("i", {
-      class: vue.normalizeClass($props.crudRoutes.destroy.icon)
+      class: vue.normalizeClass($props.routes.crud.destroy.icon)
     }, null, 2)])], 40, _hoisted_24)) : vue.createCommentVNode("", true)])) : vue.createCommentVNode("", true)]);
   }), 128))], 2)]), _ctx.tableData.length > 0 && $props.show.includes('pagination') ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_26, [vue.createElementVNode("p", _hoisted_27, "Results: " + vue.toDisplayString(_ctx.paginationStatus.from) + " - " + vue.toDisplayString(_ctx.paginationStatus.to) + " of " + vue.toDisplayString(_ctx.paginationStatus.total), 1), vue.createElementVNode("ul", _hoisted_28, [(vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList(_ctx.paginationData, function (link, linkIndex) {
     return vue.openBlock(), vue.createElementBlock("li", {

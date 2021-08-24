@@ -8,8 +8,8 @@
 
         <div class="table-actions">
 
-            <div v-if="crudRoutes.create" class="table-action table-action-create">
-                <a :href="this.$route(crudRoutes.create.name)"><i v-if="crudRoutes.create.icon" :class="crudRoutes.create.icon"></i>Create</a>
+            <div v-if="routes.crud.create" class="table-action table-action-create">
+                <a :href="this.$route(routes.crud.create.name)"><i v-if="routes.crud.create.icon" :class="routes.crud.create.icon"></i>Create</a>
             </div>
 
             <div v-if="searchable.length > 0 && show.includes('search')" class="table-action table-action-search">
@@ -17,12 +17,12 @@
             </div>
             
             <div v-if="show.includes('limit')" class="table-action table-action-limit">
-                <select v-model="take" class="custom-select">
-                    <option v-for="value of limit.show" :key="value" :value="value">{{ value }}</option>
+                <select v-model="limit" class="custom-select">
+                    <option v-for="value of resultsPerPageOptions" :key="value" :value="value">{{ value }}</option>
                 </select>
             </div>
 
-            <div v-if="crudRoutes?.destroy?.bulk" class="table-action table-action-delete-bulk">
+            <div v-if="routes.crud?.destroy?.bulk" class="table-action table-action-delete-bulk">
                 <form @submit="destroy($event, selectedIds)">
                     <button :disabled="selectedIds.length <= 0" type="submit" :class="{ disabled: selectedIds.length <= 0 }">Delete selected</button>
                 </form>
@@ -34,32 +34,32 @@
 
             <thead>
                 <tr>
-                    <th v-if="crudRoutes?.destroy?.bulk"></th>
+                    <th v-if="routes.crud?.destroy?.bulk"></th>
 
                     <th v-for="(header, headerIndex) in headers" :key="headerIndex">
                         <a v-if="header.orderable" class="orderable" :class="{ 'direction-asc': (query.direction == 'asc'), 'direction-desc': (query.direction == 'desc')}" href="#" @click="toggleOrder($event, header.column)">{{ header.display }}</a>
                         <template v-else>{{ header.display }}</template>
                     </th>
 
-                    <th v-if="crudRoutes">Actions</th>
+                    <th v-if="routes.crud">Actions</th>
                 </tr>
             </thead>
 
             <tbody :class="{ loading: loading }">
 
                 <tr v-if="tableData.length <= 0">
-                    <td v-if="crudRoutes?.destroy?.bulk"></td>
+                    <td v-if="routes.crud?.destroy?.bulk"></td>
 
                     <td v-for="(header, headerIndex) in headers" :key="headerIndex">
                         <template v-if="headerIndex == 0">No results</template>
                     </td>
 
-                    <td v-if="crudRoutes"></td>
+                    <td v-if="routes.crud"></td>
                 </tr>
                 
                 <tr v-else v-for="(row, rowIndex) in tableData" :key="rowIndex">
 
-                    <td v-if="crudRoutes?.destroy?.bulk" class="row-action row-action-select">
+                    <td v-if="routes.crud?.destroy?.bulk" class="row-action row-action-select">
                         <input type="checkbox" :value="row.id" v-model="selectedIds" />
                     </td>
 
@@ -67,11 +67,11 @@
                         <td>{{ columnData }}</td>
                     </template>
 
-                    <td v-if="crudRoutes" class="row-actions">
-                        <a v-if="crudRoutes.show" :href="this.$route(crudRoutes.show.name, row.id)" class="row-action row-action-show"><i :class="crudRoutes.show.icon"></i></a>
-                        <a v-if="crudRoutes.edit" :href="this.$route(crudRoutes.edit.name, row.id)" class="row-action row-action-edit"><i :class="crudRoutes.edit.icon"></i></a>
-                        <form v-if="crudRoutes.destroy.name" @submit="destroy($event, row.id)" class="row-action row-action-delete">
-                            <button type="submit"><i :class="crudRoutes.destroy.icon"></i></button>
+                    <td v-if="routes.crud" class="row-actions">
+                        <a v-if="routes.crud.show" :href="this.$route(routes.crud.show.name, row.id)" class="row-action row-action-show"><i :class="routes.crud.show.icon"></i></a>
+                        <a v-if="routes.crud.edit" :href="this.$route(routes.crud.edit.name, row.id)" class="row-action row-action-edit"><i :class="routes.crud.edit.icon"></i></a>
+                        <form v-if="routes.crud.destroy.name" @submit="destroy($event, row.id)" class="row-action row-action-delete">
+                            <button type="submit"><i :class="routes.crud.destroy.icon"></i></button>
                         </form>
                     </td>
                 </tr>
@@ -102,34 +102,36 @@ export default {
 
     props: {
 
-        // Required table identifier
-        // .table-container will also have the class .table-name
+        /**
+         * Required table identifier
+         * .table-container will also have the class .table-name 
+         */ 
         name: {
             type: String,
             required: true
         },
 
-        // Route name for where we are getting
-        // the pagination data
-        dataRoute: {
-            type: String,
-            required: true
-        },
-
-        // CRUD routes (create, show, edit, destroy)
-        // Example: { create: 'data.create', show: 'data.show', icon: 'fas fa-user' }
-        // The above example will show a create button in the top, and a view button
-        // for each table row. If you have the routes edit, show and destroy included,
-        // remember they need to have icon classes! 
-        // Icon is optional for create route.
-        // Destroy route can also contain a boolean "bulk" field to enable checkboxes and
-        // buld deletion of rows
-        crudRoutes: {
+        /* 
+        * Routes (data route + CRUD routes)
+        * Example: :route="{
+        *   data: 'api.usres', 
+        *   crud: { 
+        *       create: 'data.create', 
+        *       show: 'data.show', 
+        *       icon: 'fas fa-user' 
+        *   }
+        * }"
+        * 
+        * The above example will show a create button in the top, and a view button
+        * for each table row. If you have the routes edit, show and destroy included,
+        * remember they need to have icon classes! 
+        * Icon is optional for create route.
+        * Destroy route can also contain a boolean "bulk" field to enable checkboxes and
+        * buld deletion of rows
+        */
+        routes: {
             type: Object,
-            required: false,
-            default: function() {
-                return {}
-            }
+            required: true
         },
 
         // All headers must be present with a corresponding
@@ -143,15 +145,18 @@ export default {
 
         // How many rows to display at a time
         // Defaults to 25 is none is passed
-        limit: {
-            type: Object,
+        resultsPerPage: {
+            type: Number,
             required: false,
-            default: function() { 
-                return {
-                    show: [5, 10, 25, 50, 100, 250, 500, 1000],
-                    take: 25
-                }
-            }
+            default: 25
+        },
+
+        // Select box for how many rows per page we want
+        // Has default value, not required
+        resultsPerPageOptions: {
+            type: Array,
+            required: false,
+            default: [5, 10, 25, 50, 100, 250, 500, 1000]
         },
 
         // Wich "modules" to show
@@ -212,7 +217,7 @@ export default {
             searchable: [],
 
             // Limit model
-            take: this.limit.take,
+            limit: this.resultsPerPage,
 
             // Selected model
             selectedIds: [],
@@ -250,24 +255,9 @@ export default {
         }, 300),
 
         // Update how many rows to show
-        take: function() {
+        limit: function() {
             this.current = 1;
             this.getResults();
-        }
-
-    },
-
-    computed: {
-
-        showSearch: (vm) => {
-            return (vm.searchable.length > 0) ? true : false;
-        },
-
-        limit: (vm) => {
-            let limit = {};
-            limit.show = (vm.limit.show) ? vm.limit.show : [5, 10, 25, 50, 100, 250, 500, 1000];
-            limit.take = (vm.limit.take) ? vm.limit.take : 25;
-            return limit;
         }
 
     },
@@ -316,9 +306,9 @@ export default {
             this.loading = true;
 
             // Prepare the URL
-            let url = new URL(this.$route(this.dataRoute));
+            let url = new URL(this.$route(this.routes.data));
             url.searchParams.set('page', this.current);
-            url.searchParams.set('limit', this.take);
+            url.searchParams.set('limit', this.limit);
 
             // Add order parameters if they exist
             if (this.query.order || this.query.direction) {
@@ -368,7 +358,7 @@ export default {
 
             // Confirm action
             if (confirm(confirmText)) {
-                this.$axios.post(this.$route(this.crudRoutes.destroy.name, model), {
+                this.$axios.post(this.$route(this.routes.crud.destroy.name, model), {
                     _method: 'DELETE'
                 })
                 .then((response) => {
