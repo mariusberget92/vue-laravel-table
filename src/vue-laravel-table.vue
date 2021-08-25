@@ -8,7 +8,7 @@
 
         <div class="table-actions">
 
-            <div v-if="routes.crud.create" class="table-action table-action-create">
+            <div v-if="routes.crud && routes.crud.create" class="table-action table-action-create">
                 <a :href="this.$route(routes.crud.create.name)"><i v-if="routes.crud.create.icon" :class="routes.crud.create.icon"></i>Create</a>
             </div>
 
