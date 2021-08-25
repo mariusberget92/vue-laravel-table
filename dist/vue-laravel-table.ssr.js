@@ -17637,7 +17637,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       hidden: !_ctx.notification.show,
       show: _ctx.notification.show,
       'notification-success': _ctx.notification.status == 200,
-      'notification-error': _ctx.notification.status !== 200
+      'notification-danger': _ctx.notification.status !== 200
     }])
   }, [vue.createElementVNode("p", _hoisted_10, vue.toDisplayString(_ctx.notification.message), 1)], 2)) : vue.createCommentVNode("", true), vue.createElementVNode("table", _hoisted_11, [vue.createElementVNode("thead", null, [vue.createElementVNode("tr", null, [(_$props$routes$crud4 = $props.routes.crud) !== null && _$props$routes$crud4 !== void 0 && (_$props$routes$crud4$ = _$props$routes$crud4.destroy) !== null && _$props$routes$crud4$ !== void 0 && _$props$routes$crud4$.bulk ? (vue.openBlock(), vue.createElementBlock("th", _hoisted_12)) : vue.createCommentVNode("", true), (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList($props.headers, function (header, headerIndex) {
     return vue.openBlock(), vue.createElementBlock("th", {

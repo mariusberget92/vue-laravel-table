@@ -26,7 +26,7 @@
             
         </div>
 
-        <div v-if="notification.message != false" class="notification" :class="{ hidden: !notification.show, show: notification.show, 'notification-success': notification.status == 200, 'notification-error': notification.status !== 200 }">
+        <div v-if="notification.message != false" class="notification" :class="{ hidden: !notification.show, show: notification.show, 'notification-success': notification.status == 200, 'notification-danger': notification.status !== 200 }">
             <p class="notification-text">{{ notification.message }}</p>
         </div>
 

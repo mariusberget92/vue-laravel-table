@@ -17566,7 +17566,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       hidden: !_ctx.notification.show,
       show: _ctx.notification.show,
       'notification-success': _ctx.notification.status == 200,
-      'notification-error': _ctx.notification.status !== 200
+      'notification-danger': _ctx.notification.status !== 200
     }])
   }, [createElementVNode("p", _hoisted_10, toDisplayString(_ctx.notification.message), 1)], 2)) : createCommentVNode("", true), createElementVNode("table", _hoisted_11, [createElementVNode("thead", null, [createElementVNode("tr", null, [(_$props$routes$crud4 = $props.routes.crud) !== null && _$props$routes$crud4 !== void 0 && (_$props$routes$crud4$ = _$props$routes$crud4.destroy) !== null && _$props$routes$crud4$ !== void 0 && _$props$routes$crud4$.bulk ? (openBlock(), createElementBlock("th", _hoisted_12)) : createCommentVNode("", true), (openBlock(true), createElementBlock(Fragment, null, renderList($props.headers, (header, headerIndex) => {
     return openBlock(), createElementBlock("th", {
