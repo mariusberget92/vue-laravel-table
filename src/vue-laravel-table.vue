@@ -41,7 +41,7 @@
                         <template v-else>{{ header.display }}</template>
                     </th>
 
-                    <th v-if="routes.crud">Actions</th>
+                    <th v-if="routes.crud && (routes.crud.edit || routes.crud.show || routes.crud.destroy)">Actions</th>
                 </tr>
             </thead>
 
@@ -67,11 +67,11 @@
                         <td>{{ columnData }}</td>
                     </template>
 
-                    <td v-if="routes.crud" class="row-actions">
-                        <a v-if="routes.crud.show" :href="this.$route(routes.crud.show.name, row.id)" class="row-action row-action-show"><i :class="routes.crud.show.icon"></i></a>
-                        <a v-if="routes.crud.edit" :href="this.$route(routes.crud.edit.name, row.id)" class="row-action row-action-edit"><i :class="routes.crud.edit.icon"></i></a>
-                        <form v-if="routes.crud.destroy.name" @submit="destroy($event, row.id)" class="row-action row-action-delete">
-                            <button type="submit"><i :class="routes.crud.destroy.icon"></i></button>
+                    <td v-if="routes.crud && (routes.crud.edit || routes.crud.show || routes.crud.destroy)" class="row-actions">
+                        <a v-if="routes.crud.show" :href="this.$route(routes.crud.show.name, row.id)" class="row-action row-action-show"><i :class="(routes.crud.show.icon) ? routes.crud.show.icon : 'fas fa-fw fa-eye'"></i></a>
+                        <a v-if="routes.crud.edit" :href="this.$route(routes.crud.edit.name, row.id)" class="row-action row-action-edit"><i :class="(routes.crud.edit.icon) ? routes.crud.edit.icon : 'fas fa-fw fa-edit'"></i></a>
+                        <form v-if="routes.crud.destroy" @submit="destroy($event, row.id)" class="row-action row-action-delete">
+                            <button type="submit"><i :class="(routes.crud.destroy.icon) ? routes.crud.destroy.icon : 'fas fa-fw fa-trash'"></i></button>
                         </form>
                     </td>
                 </tr>
@@ -344,45 +344,48 @@ export default {
         destroy(event, model) {
             event.preventDefault()
 
-            // Confirmation text to be sure that the user
-            // wants to delete the model
-            let confirmText = (Array.isArray(model))
-            ? 'Are you sure you want to delete the selected models'
-            : 'Are you sure you want to delete this model?'
+            if (this.routes.crud.destroy) {
 
-            // Check if the model is an array of models or a simple
-            // model (integer)
-            model = (Array.isArray(model))
-            ? model.map((v, k) => { return v }).join()
-            : model
+                // Confirmation text to be sure that the user
+                // wants to delete the model
+                let confirmText = (Array.isArray(model))
+                ? 'Are you sure you want to delete the selected models'
+                : 'Are you sure you want to delete this model?'
 
-            // Confirm action
-            if (confirm(confirmText)) {
-                this.$axios.post(this.$route(this.routes.crud.destroy.name, model), {
-                    _method: 'DELETE'
-                })
-                .then((response) => {
+                // Check if the model is an array of models or a simple
+                // model (integer)
+                model = (Array.isArray(model))
+                ? model.map((v, k) => { return v }).join()
+                : model
 
-                    // Reset selected rows to an empty array
-                    this.selectedIds = []
+                // Confirm action
+                if (confirm(confirmText)) {
+                    this.$axios.post(this.$route(this.routes.crud.destroy.name, model), {
+                        _method: 'DELETE'
+                    })
+                    .then((response) => {
 
-                    var that = this;
-                    this.notification.message = response.data.message;
-                    this.notification.type = response.data.type;
-                    this.notification.display = true;
-                    setTimeout(() => {
-                        that.notification.message,
-                        that.notification.type,
-                        that.notification.display = false;
-                    }, that.notificationTimeout)
+                        // Reset selected rows to an empty array
+                        this.selectedIds = []
 
-                    // Refresh the table
-                    this.getResults()
+                        var that = this;
+                        this.notification.message = response.data.message;
+                        this.notification.type = response.data.type;
+                        this.notification.display = true;
+                        setTimeout(() => {
+                            that.notification.message,
+                            that.notification.type,
+                            that.notification.display = false;
+                        }, that.notificationTimeout)
 
-                })
-                .catch((error) => {
-                    throw new Error(error);
-                })
+                        // Refresh the table
+                        this.getResults()
+
+                    })
+                    .catch((error) => {
+                        throw new Error(error);
+                    })
+                }
             }
         },
 

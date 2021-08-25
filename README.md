@@ -157,6 +157,7 @@ class UserController extends Controller
 * `:routes`
 * * Required!
 * * Object containing all route names and icons for CRUD routes (see example).
+* * All icons are set at default, so no need to include default icons if you're not changing them to something else. The ones in the example are the default ones and can be removed from CRUD prop.
 
 
 * `:headers`
