@@ -8,8 +8,8 @@
 
         <div class="table-actions">
 
-            <div v-if="routes.crud && routes.crud.create" class="table-action table-action-create">
-                <a :href="this.$route(routes.crud.create.name)"><i v-if="routes.crud.create.icon" :class="routes.crud.create.icon"></i>Create</a>
+            <div v-if="routes.crud?.create" class="table-action table-action-create">
+                <a :href="this.$route(routes.crud.create.name)"><i v-if="routes.crud?.create?.icon" :class="routes.crud.create.icon"></i>Create</a>
             </div>
 
             <div v-if="searchable.length > 0 && show.includes('search')" class="table-action table-action-search">
@@ -41,7 +41,7 @@
                         <template v-else>{{ header.display }}</template>
                     </th>
 
-                    <th v-if="routes.crud && (routes.crud.edit || routes.crud.show || routes.crud.destroy)">Actions</th>
+                    <th v-if="routes.crud?.edit || routes.crud?.show || routes.crud?.destroy">Actions</th>
                 </tr>
             </thead>
 
@@ -67,11 +67,11 @@
                         <td>{{ columnData }}</td>
                     </template>
 
-                    <td v-if="routes.crud && (routes.crud.edit || routes.crud.show || routes.crud.destroy)" class="row-actions">
-                        <a v-if="routes.crud.show" :href="this.$route(routes.crud.show.name, row.id)" class="row-action row-action-show"><i :class="(routes.crud.show.icon) ? routes.crud.show.icon : 'fas fa-fw fa-eye'"></i></a>
-                        <a v-if="routes.crud.edit" :href="this.$route(routes.crud.edit.name, row.id)" class="row-action row-action-edit"><i :class="(routes.crud.edit.icon) ? routes.crud.edit.icon : 'fas fa-fw fa-edit'"></i></a>
-                        <form v-if="routes.crud.destroy" @submit="destroy($event, row.id)" class="row-action row-action-delete">
-                            <button type="submit"><i :class="(routes.crud.destroy.icon) ? routes.crud.destroy.icon : 'fas fa-fw fa-trash'"></i></button>
+                    <td v-if="routes.crud?.edit || routes.crud?.show || routes.crud?.destroy" class="row-actions">
+                        <a v-if="routes.crud?.show" :href="this.$route(routes.crud.show.name, row.id)" class="row-action row-action-show"><i :class="routes.crud?.show?.icon ?? 'fas fa-fw fa-eye'"></i></a>
+                        <a v-if="routes.crud?.edit" :href="this.$route(routes.crud.edit.name, row.id)" class="row-action row-action-edit"><i :class="routes.crud?.edit?.icon ?? 'fas fa-fw fa-edit'"></i></a>
+                        <form v-if="routes.crud?.destroy" @submit="destroy($event, row.id)" class="row-action row-action-delete">
+                            <button type="submit"><i :class="routes.crud?.destroy?.icon ?? 'fas fa-fw fa-trash'"></i></button>
                         </form>
                     </td>
                 </tr>
