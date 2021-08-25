@@ -1,4 +1,4 @@
-import { openBlock, createElementBlock, Fragment, normalizeClass, createElementVNode, toDisplayString, createCommentVNode, withDirectives, vModelText, renderList, vModelSelect, createTextVNode, vModelCheckbox } from 'vue';
+import { openBlock, createElementBlock, normalizeClass, createElementVNode, createCommentVNode, withDirectives, vModelText, Fragment, renderList, toDisplayString, vModelSelect, createTextVNode, vModelCheckbox } from 'vue';
 
 var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
 
@@ -17312,11 +17312,11 @@ var script = {
       limit: this.resultsPerPage,
       // Selected model
       selectedIds: [],
-      // Notification (shown on deletion)
+      // Notification
       notification: {
-        display: false,
+        show: false,
         message: false,
-        class: ''
+        status: 200
       }
     };
   },
@@ -17414,37 +17414,40 @@ var script = {
 
     // Simple delete method
     destroy(event, model) {
+      var _this$routes$crud, _this$routes$crud$des;
+
       event.preventDefault();
 
-      if (this.routes.crud.destroy) {
-        // Confirmation text to be sure that the user
-        // wants to delete the model
-        let confirmText = Array.isArray(model) ? 'Are you sure you want to delete the selected models' : 'Are you sure you want to delete this model?'; // Check if the model is an array of models or a simple
-        // model (integer)
+      if ((_this$routes$crud = this.routes.crud) !== null && _this$routes$crud !== void 0 && (_this$routes$crud$des = _this$routes$crud.destroy) !== null && _this$routes$crud$des !== void 0 && _this$routes$crud$des.name) {
+        var _this$routes$crud2, _this$routes$crud2$de, _this$routes$crud3, _this$routes$crud3$de;
 
+        // Check if the model is an array of models or a simple
+        // model (integer)
         model = Array.isArray(model) ? model.map((v, k) => {
           return v;
         }).join() : model; // Confirm action
 
-        if (confirm(confirmText)) {
-          this.$axios.post(this.$route(this.routes.crud.destroy.name, model), {
-            _method: 'DELETE'
-          }).then(response => {
-            // Reset selected rows to an empty array
-            this.selectedIds = [];
-            var that = this;
-            this.notification.message = response.data.message;
-            this.notification.type = response.data.type;
-            this.notification.display = true;
-            setTimeout(() => {
-              that.notification.message, that.notification.type, that.notification.display = false;
-            }, that.notificationTimeout); // Refresh the table
+        let confirmed = true;
 
-            this.getResults();
-          }).catch(error => {
-            throw new Error(error);
-          });
+        if ((_this$routes$crud2 = this.routes.crud) !== null && _this$routes$crud2 !== void 0 && (_this$routes$crud2$de = _this$routes$crud2.destroy) !== null && _this$routes$crud2$de !== void 0 && _this$routes$crud2$de.confirm) {
+          confirmed = confirm(this.routes.crud.destroy.confirm);
         }
+
+        confirmed && this.$axios.post(this.$route((_this$routes$crud3 = this.routes.crud) === null || _this$routes$crud3 === void 0 ? void 0 : (_this$routes$crud3$de = _this$routes$crud3.destroy) === null || _this$routes$crud3$de === void 0 ? void 0 : _this$routes$crud3$de.name, model), {
+          _method: 'DELETE'
+        }).then(response => {
+          // Reset selected rows to an empty array
+          this.selectedIds = [];
+          this.notification.message = response.data.message;
+          this.notification.status = response.data.status;
+          this.notification.show = true;
+          this.getResults();
+          setTimeout(() => {
+            this.notification.show = false;
+          }, this.notificationTimeout);
+        }).catch(error => {
+          throw new Error(error);
+        });
       }
     }
 
@@ -17452,33 +17455,33 @@ var script = {
 };
 
 const _hoisted_1 = {
-  class: "notification-text"
-};
-const _hoisted_2 = {
   class: "table-actions"
 };
-const _hoisted_3 = {
+const _hoisted_2 = {
   key: 0,
   class: "table-action table-action-create"
 };
-const _hoisted_4 = ["href"];
+const _hoisted_3 = ["href"];
 
-const _hoisted_5 = /*#__PURE__*/createTextVNode("Create");
+const _hoisted_4 = /*#__PURE__*/createTextVNode("Create");
 
-const _hoisted_6 = {
+const _hoisted_5 = {
   key: 1,
   class: "table-action table-action-search"
 };
-const _hoisted_7 = {
+const _hoisted_6 = {
   key: 2,
   class: "table-action table-action-limit"
 };
-const _hoisted_8 = ["value"];
-const _hoisted_9 = {
+const _hoisted_7 = ["value"];
+const _hoisted_8 = {
   key: 3,
   class: "table-action table-action-delete-bulk"
 };
-const _hoisted_10 = ["disabled"];
+const _hoisted_9 = ["disabled"];
+const _hoisted_10 = {
+  class: "notification-text"
+};
 const _hoisted_11 = {
   class: "table"
 };
@@ -17517,42 +17520,39 @@ const _hoisted_25 = {
   type: "submit"
 };
 const _hoisted_26 = {
-  key: 0,
-  class: "pagination-container"
+  key: 1,
+  class: "pagination"
 };
 const _hoisted_27 = {
   class: "pagination-status"
 };
 const _hoisted_28 = {
-  class: "pagination"
+  class: "pagination-items"
 };
 const _hoisted_29 = ["data-href", "innerHTML", "onClick"];
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _$props$routes$crud, _$props$routes$crud2, _$props$routes$crud2$, _$props$routes$crud3, _$props$routes$crud3$, _$props$routes$crud4, _$props$routes$crud4$, _$props$routes$crud5, _$props$routes$crud6, _$props$routes$crud7, _$props$routes$crud8, _$props$routes$crud8$;
 
-  return openBlock(), createElementBlock(Fragment, null, [_ctx.notification.display == true ? (openBlock(), createElementBlock("div", {
-    key: 0,
-    class: normalizeClass(["notification", _ctx.notification.class])
-  }, [createElementVNode("p", _hoisted_1, toDisplayString(_ctx.notification.message), 1)], 2)) : createCommentVNode("", true), createElementVNode("div", {
+  return openBlock(), createElementBlock("div", {
     class: normalizeClass([$props.name, "table-container"])
-  }, [createElementVNode("div", _hoisted_2, [(_$props$routes$crud = $props.routes.crud) !== null && _$props$routes$crud !== void 0 && _$props$routes$crud.create ? (openBlock(), createElementBlock("div", _hoisted_3, [createElementVNode("a", {
+  }, [createElementVNode("div", _hoisted_1, [(_$props$routes$crud = $props.routes.crud) !== null && _$props$routes$crud !== void 0 && _$props$routes$crud.create ? (openBlock(), createElementBlock("div", _hoisted_2, [createElementVNode("a", {
     href: this.$route($props.routes.crud.create.name)
   }, [(_$props$routes$crud2 = $props.routes.crud) !== null && _$props$routes$crud2 !== void 0 && (_$props$routes$crud2$ = _$props$routes$crud2.create) !== null && _$props$routes$crud2$ !== void 0 && _$props$routes$crud2$.icon ? (openBlock(), createElementBlock("i", {
     key: 0,
     class: normalizeClass($props.routes.crud.create.icon)
-  }, null, 2)) : createCommentVNode("", true), _hoisted_5], 8, _hoisted_4)])) : createCommentVNode("", true), _ctx.searchable.length > 0 && $props.show.includes('search') ? (openBlock(), createElementBlock("div", _hoisted_6, [withDirectives(createElementVNode("input", {
+  }, null, 2)) : createCommentVNode("", true), _hoisted_4], 8, _hoisted_3)])) : createCommentVNode("", true), _ctx.searchable.length > 0 && $props.show.includes('search') ? (openBlock(), createElementBlock("div", _hoisted_5, [withDirectives(createElementVNode("input", {
     "onUpdate:modelValue": _cache[0] || (_cache[0] = $event => _ctx.query.q = $event),
     type: "text",
     placeholder: "Search..."
-  }, null, 512), [[vModelText, _ctx.query.q]])])) : createCommentVNode("", true), $props.show.includes('limit') ? (openBlock(), createElementBlock("div", _hoisted_7, [withDirectives(createElementVNode("select", {
+  }, null, 512), [[vModelText, _ctx.query.q]])])) : createCommentVNode("", true), $props.show.includes('limit') ? (openBlock(), createElementBlock("div", _hoisted_6, [withDirectives(createElementVNode("select", {
     "onUpdate:modelValue": _cache[1] || (_cache[1] = $event => _ctx.limit = $event),
     class: "custom-select"
   }, [(openBlock(true), createElementBlock(Fragment, null, renderList($props.resultsPerPageOptions, value => {
     return openBlock(), createElementBlock("option", {
       key: value,
       value: value
-    }, toDisplayString(value), 9, _hoisted_8);
-  }), 128))], 512), [[vModelSelect, _ctx.limit]])])) : createCommentVNode("", true), (_$props$routes$crud3 = $props.routes.crud) !== null && _$props$routes$crud3 !== void 0 && (_$props$routes$crud3$ = _$props$routes$crud3.destroy) !== null && _$props$routes$crud3$ !== void 0 && _$props$routes$crud3$.bulk ? (openBlock(), createElementBlock("div", _hoisted_9, [createElementVNode("form", {
+    }, toDisplayString(value), 9, _hoisted_7);
+  }), 128))], 512), [[vModelSelect, _ctx.limit]])])) : createCommentVNode("", true), (_$props$routes$crud3 = $props.routes.crud) !== null && _$props$routes$crud3 !== void 0 && (_$props$routes$crud3$ = _$props$routes$crud3.destroy) !== null && _$props$routes$crud3$ !== void 0 && _$props$routes$crud3$.bulk ? (openBlock(), createElementBlock("div", _hoisted_8, [createElementVNode("form", {
     onSubmit: _cache[2] || (_cache[2] = $event => $options.destroy($event, _ctx.selectedIds))
   }, [createElementVNode("button", {
     disabled: _ctx.selectedIds.length <= 0,
@@ -17560,7 +17560,15 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     class: normalizeClass({
       disabled: _ctx.selectedIds.length <= 0
     })
-  }, "Delete selected", 10, _hoisted_10)], 32)])) : createCommentVNode("", true)]), createElementVNode("table", _hoisted_11, [createElementVNode("thead", null, [createElementVNode("tr", null, [(_$props$routes$crud4 = $props.routes.crud) !== null && _$props$routes$crud4 !== void 0 && (_$props$routes$crud4$ = _$props$routes$crud4.destroy) !== null && _$props$routes$crud4$ !== void 0 && _$props$routes$crud4$.bulk ? (openBlock(), createElementBlock("th", _hoisted_12)) : createCommentVNode("", true), (openBlock(true), createElementBlock(Fragment, null, renderList($props.headers, (header, headerIndex) => {
+  }, "Delete selected", 10, _hoisted_9)], 32)])) : createCommentVNode("", true)]), _ctx.notification.message != false ? (openBlock(), createElementBlock("div", {
+    key: 0,
+    class: normalizeClass(["notification", {
+      hidden: !_ctx.notification.show,
+      show: _ctx.notification.show,
+      'notification-success': _ctx.notification.status == 200,
+      'notification-error': _ctx.notification.status !== 200
+    }])
+  }, [createElementVNode("p", _hoisted_10, toDisplayString(_ctx.notification.message), 1)], 2)) : createCommentVNode("", true), createElementVNode("table", _hoisted_11, [createElementVNode("thead", null, [createElementVNode("tr", null, [(_$props$routes$crud4 = $props.routes.crud) !== null && _$props$routes$crud4 !== void 0 && (_$props$routes$crud4$ = _$props$routes$crud4.destroy) !== null && _$props$routes$crud4$ !== void 0 && _$props$routes$crud4$.bulk ? (openBlock(), createElementBlock("th", _hoisted_12)) : createCommentVNode("", true), (openBlock(true), createElementBlock(Fragment, null, renderList($props.headers, (header, headerIndex) => {
     return openBlock(), createElementBlock("th", {
       key: headerIndex
     }, [header.orderable ? (openBlock(), createElementBlock("a", {
@@ -17621,17 +17629,17 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   }), 128))], 2)]), _ctx.tableData.length > 0 && $props.show.includes('pagination') ? (openBlock(), createElementBlock("div", _hoisted_26, [createElementVNode("p", _hoisted_27, "Results: " + toDisplayString(_ctx.paginationStatus.from) + " - " + toDisplayString(_ctx.paginationStatus.to) + " of " + toDisplayString(_ctx.paginationStatus.total), 1), createElementVNode("ul", _hoisted_28, [(openBlock(true), createElementBlock(Fragment, null, renderList(_ctx.paginationData, (link, linkIndex) => {
     return openBlock(), createElementBlock("li", {
       key: linkIndex,
-      class: normalizeClass(["pagepagination-item", {
+      class: normalizeClass(["pagination-item", {
         disabled: link.url == null,
         active: link.active
       }])
     }, [createElementVNode("a", {
-      class: "pageination-link",
+      class: "pagination-link",
       "data-href": link.url,
       innerHTML: link.label,
       onClick: $event => link.url != null && $options.paginate($event)
     }, null, 8, _hoisted_29)], 2);
-  }), 128))])])) : createCommentVNode("", true)], 2)], 64);
+  }), 128))])])) : createCommentVNode("", true)], 2);
 }
 
 script.render = render;

@@ -1,9 +1,5 @@
 <template>
 
-    <div v-if="notification.display == true" class="notification" :class="notification.class">
-        <p class="notification-text">{{ notification.message }}</p>
-    </div>
-
     <div :class="name" class="table-container">
 
         <div class="table-actions">
@@ -29,7 +25,11 @@
             </div>
             
         </div>
-        
+
+        <div v-if="notification.message != false" class="notification" :class="{ hidden: !notification.show, show: notification.show, 'notification-success': notification.status == 200, 'notification-error': notification.status !== 200 }">
+            <p class="notification-text">{{ notification.message }}</p>
+        </div>
+
         <table class="table">
 
             <thead>
@@ -80,12 +80,12 @@
 
         </table>
 
-        <div v-if="tableData.length > 0 && show.includes('pagination')" class="pagination-container">
+        <div v-if="tableData.length > 0 && show.includes('pagination')" class="pagination">
             <p class="pagination-status">Results: {{ paginationStatus.from }} - {{ paginationStatus.to }} of {{ paginationStatus.total }}</p>
-            <ul class="pagination">
+            <ul class="pagination-items">
                 <template v-for="(link, linkIndex) in paginationData" :key="linkIndex">
-                    <li class="pagepagination-item" :class="{ disabled: link.url == null, active: link.active }">
-                        <a class="pageination-link" :data-href="link.url" v-html="link.label" @click="link.url != null && paginate($event)"></a>
+                    <li class="pagination-item" :class="{ disabled: link.url == null, active: link.active }">
+                        <a class="pagination-link" :data-href="link.url" v-html="link.label" @click="link.url != null && paginate($event)"></a>
                     </li>
                 </template>
             </ul>
@@ -222,11 +222,11 @@ export default {
             // Selected model
             selectedIds: [],
 
-            // Notification (shown on deletion)
+            // Notification
             notification: {
-                display: false,
+                show: false,
                 message: false,
-                class: ''
+                status: 200
             }
 
         }
@@ -344,13 +344,7 @@ export default {
         destroy(event, model) {
             event.preventDefault()
 
-            if (this.routes.crud.destroy) {
-
-                // Confirmation text to be sure that the user
-                // wants to delete the model
-                let confirmText = (Array.isArray(model))
-                ? 'Are you sure you want to delete the selected models'
-                : 'Are you sure you want to delete this model?'
+            if (this.routes.crud?.destroy?.name) {
 
                 // Check if the model is an array of models or a simple
                 // model (integer)
@@ -359,33 +353,31 @@ export default {
                 : model
 
                 // Confirm action
-                if (confirm(confirmText)) {
-                    this.$axios.post(this.$route(this.routes.crud.destroy.name, model), {
+                let confirmed = true;
+                if (this.routes.crud?.destroy?.confirm) {
+                    confirmed = confirm(this.routes.crud.destroy.confirm);
+                }
+
+                confirmed && 
+                    this.$axios.post(this.$route(this.routes.crud?.destroy?.name, model), {
                         _method: 'DELETE'
-                    })
-                    .then((response) => {
+                    }).then((response) => {
 
                         // Reset selected rows to an empty array
                         this.selectedIds = []
-
-                        var that = this;
                         this.notification.message = response.data.message;
-                        this.notification.type = response.data.type;
-                        this.notification.display = true;
-                        setTimeout(() => {
-                            that.notification.message,
-                            that.notification.type,
-                            that.notification.display = false;
-                        }, that.notificationTimeout)
-
-                        // Refresh the table
+                        this.notification.status = response.data.status;
+                        this.notification.show = true;
                         this.getResults()
+
+                        setTimeout(() => {
+                            this.notification.show = false;
+                        }, this.notificationTimeout)
 
                     })
                     .catch((error) => {
                         throw new Error(error);
                     })
-                }
             }
         },
 

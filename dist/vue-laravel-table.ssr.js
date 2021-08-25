@@ -17363,11 +17363,11 @@ var _ = lodash;var script = {
       limit: this.resultsPerPage,
       // Selected model
       selectedIds: [],
-      // Notification (shown on deletion)
+      // Notification
       notification: {
-        display: false,
+        show: false,
         message: false,
-        class: ''
+        status: 200
       }
     };
   },
@@ -17466,70 +17466,75 @@ var _ = lodash;var script = {
     },
     // Simple delete method
     destroy: function destroy(event, model) {
-      var _this2 = this;
+      var _this$routes$crud,
+          _this$routes$crud$des,
+          _this2 = this;
 
       event.preventDefault();
 
-      if (this.routes.crud.destroy) {
-        // Confirmation text to be sure that the user
-        // wants to delete the model
-        var confirmText = Array.isArray(model) ? 'Are you sure you want to delete the selected models' : 'Are you sure you want to delete this model?'; // Check if the model is an array of models or a simple
-        // model (integer)
+      if ((_this$routes$crud = this.routes.crud) !== null && _this$routes$crud !== void 0 && (_this$routes$crud$des = _this$routes$crud.destroy) !== null && _this$routes$crud$des !== void 0 && _this$routes$crud$des.name) {
+        var _this$routes$crud2, _this$routes$crud2$de, _this$routes$crud3, _this$routes$crud3$de;
 
+        // Check if the model is an array of models or a simple
+        // model (integer)
         model = Array.isArray(model) ? model.map(function (v, k) {
           return v;
         }).join() : model; // Confirm action
 
-        if (confirm(confirmText)) {
-          this.$axios.post(this.$route(this.routes.crud.destroy.name, model), {
-            _method: 'DELETE'
-          }).then(function (response) {
-            // Reset selected rows to an empty array
-            _this2.selectedIds = [];
-            var that = _this2;
-            _this2.notification.message = response.data.message;
-            _this2.notification.type = response.data.type;
-            _this2.notification.display = true;
-            setTimeout(function () {
-              that.notification.message, that.notification.type, that.notification.display = false;
-            }, that.notificationTimeout); // Refresh the table
+        var confirmed = true;
 
-            _this2.getResults();
-          }).catch(function (error) {
-            throw new Error(error);
-          });
+        if ((_this$routes$crud2 = this.routes.crud) !== null && _this$routes$crud2 !== void 0 && (_this$routes$crud2$de = _this$routes$crud2.destroy) !== null && _this$routes$crud2$de !== void 0 && _this$routes$crud2$de.confirm) {
+          confirmed = confirm(this.routes.crud.destroy.confirm);
         }
+
+        confirmed && this.$axios.post(this.$route((_this$routes$crud3 = this.routes.crud) === null || _this$routes$crud3 === void 0 ? void 0 : (_this$routes$crud3$de = _this$routes$crud3.destroy) === null || _this$routes$crud3$de === void 0 ? void 0 : _this$routes$crud3$de.name, model), {
+          _method: 'DELETE'
+        }).then(function (response) {
+          // Reset selected rows to an empty array
+          _this2.selectedIds = [];
+          _this2.notification.message = response.data.message;
+          _this2.notification.status = response.data.status;
+          _this2.notification.show = true;
+
+          _this2.getResults();
+
+          setTimeout(function () {
+            _this2.notification.show = false;
+          }, _this2.notificationTimeout);
+        }).catch(function (error) {
+          throw new Error(error);
+        });
       }
     }
   }
 };var _hoisted_1 = {
-  class: "notification-text"
-};
-var _hoisted_2 = {
   class: "table-actions"
 };
-var _hoisted_3 = {
+var _hoisted_2 = {
   key: 0,
   class: "table-action table-action-create"
 };
-var _hoisted_4 = ["href"];
+var _hoisted_3 = ["href"];
 
-var _hoisted_5 = /*#__PURE__*/vue.createTextVNode("Create");
+var _hoisted_4 = /*#__PURE__*/vue.createTextVNode("Create");
 
-var _hoisted_6 = {
+var _hoisted_5 = {
   key: 1,
   class: "table-action table-action-search"
 };
-var _hoisted_7 = {
+var _hoisted_6 = {
   key: 2,
   class: "table-action table-action-limit"
 };
-var _hoisted_8 = ["value"];
-var _hoisted_9 = {
+var _hoisted_7 = ["value"];
+var _hoisted_8 = {
   key: 3,
   class: "table-action table-action-delete-bulk"
 };
-var _hoisted_10 = ["disabled"];
+var _hoisted_9 = ["disabled"];
+var _hoisted_10 = {
+  class: "notification-text"
+};
 var _hoisted_11 = {
   class: "table"
 };
@@ -17568,14 +17573,14 @@ var _hoisted_25 = {
   type: "submit"
 };
 var _hoisted_26 = {
-  key: 0,
-  class: "pagination-container"
+  key: 1,
+  class: "pagination"
 };
 var _hoisted_27 = {
   class: "pagination-status"
 };
 var _hoisted_28 = {
-  class: "pagination"
+  class: "pagination-items"
 };
 var _hoisted_29 = ["data-href", "innerHTML", "onClick"];
 function render(_ctx, _cache, $props, $setup, $data, $options) {
@@ -17593,23 +17598,20 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       _$props$routes$crud8$,
       _this = this;
 
-  return vue.openBlock(), vue.createElementBlock(vue.Fragment, null, [_ctx.notification.display == true ? (vue.openBlock(), vue.createElementBlock("div", {
-    key: 0,
-    class: vue.normalizeClass(["notification", _ctx.notification.class])
-  }, [vue.createElementVNode("p", _hoisted_1, vue.toDisplayString(_ctx.notification.message), 1)], 2)) : vue.createCommentVNode("", true), vue.createElementVNode("div", {
+  return vue.openBlock(), vue.createElementBlock("div", {
     class: vue.normalizeClass([$props.name, "table-container"])
-  }, [vue.createElementVNode("div", _hoisted_2, [(_$props$routes$crud = $props.routes.crud) !== null && _$props$routes$crud !== void 0 && _$props$routes$crud.create ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_3, [vue.createElementVNode("a", {
+  }, [vue.createElementVNode("div", _hoisted_1, [(_$props$routes$crud = $props.routes.crud) !== null && _$props$routes$crud !== void 0 && _$props$routes$crud.create ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_2, [vue.createElementVNode("a", {
     href: this.$route($props.routes.crud.create.name)
   }, [(_$props$routes$crud2 = $props.routes.crud) !== null && _$props$routes$crud2 !== void 0 && (_$props$routes$crud2$ = _$props$routes$crud2.create) !== null && _$props$routes$crud2$ !== void 0 && _$props$routes$crud2$.icon ? (vue.openBlock(), vue.createElementBlock("i", {
     key: 0,
     class: vue.normalizeClass($props.routes.crud.create.icon)
-  }, null, 2)) : vue.createCommentVNode("", true), _hoisted_5], 8, _hoisted_4)])) : vue.createCommentVNode("", true), _ctx.searchable.length > 0 && $props.show.includes('search') ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_6, [vue.withDirectives(vue.createElementVNode("input", {
+  }, null, 2)) : vue.createCommentVNode("", true), _hoisted_4], 8, _hoisted_3)])) : vue.createCommentVNode("", true), _ctx.searchable.length > 0 && $props.show.includes('search') ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_5, [vue.withDirectives(vue.createElementVNode("input", {
     "onUpdate:modelValue": _cache[0] || (_cache[0] = function ($event) {
       return _ctx.query.q = $event;
     }),
     type: "text",
     placeholder: "Search..."
-  }, null, 512), [[vue.vModelText, _ctx.query.q]])])) : vue.createCommentVNode("", true), $props.show.includes('limit') ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_7, [vue.withDirectives(vue.createElementVNode("select", {
+  }, null, 512), [[vue.vModelText, _ctx.query.q]])])) : vue.createCommentVNode("", true), $props.show.includes('limit') ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_6, [vue.withDirectives(vue.createElementVNode("select", {
     "onUpdate:modelValue": _cache[1] || (_cache[1] = function ($event) {
       return _ctx.limit = $event;
     }),
@@ -17618,8 +17620,8 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("option", {
       key: value,
       value: value
-    }, vue.toDisplayString(value), 9, _hoisted_8);
-  }), 128))], 512), [[vue.vModelSelect, _ctx.limit]])])) : vue.createCommentVNode("", true), (_$props$routes$crud3 = $props.routes.crud) !== null && _$props$routes$crud3 !== void 0 && (_$props$routes$crud3$ = _$props$routes$crud3.destroy) !== null && _$props$routes$crud3$ !== void 0 && _$props$routes$crud3$.bulk ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_9, [vue.createElementVNode("form", {
+    }, vue.toDisplayString(value), 9, _hoisted_7);
+  }), 128))], 512), [[vue.vModelSelect, _ctx.limit]])])) : vue.createCommentVNode("", true), (_$props$routes$crud3 = $props.routes.crud) !== null && _$props$routes$crud3 !== void 0 && (_$props$routes$crud3$ = _$props$routes$crud3.destroy) !== null && _$props$routes$crud3$ !== void 0 && _$props$routes$crud3$.bulk ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_8, [vue.createElementVNode("form", {
     onSubmit: _cache[2] || (_cache[2] = function ($event) {
       return $options.destroy($event, _ctx.selectedIds);
     })
@@ -17629,7 +17631,15 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     class: vue.normalizeClass({
       disabled: _ctx.selectedIds.length <= 0
     })
-  }, "Delete selected", 10, _hoisted_10)], 32)])) : vue.createCommentVNode("", true)]), vue.createElementVNode("table", _hoisted_11, [vue.createElementVNode("thead", null, [vue.createElementVNode("tr", null, [(_$props$routes$crud4 = $props.routes.crud) !== null && _$props$routes$crud4 !== void 0 && (_$props$routes$crud4$ = _$props$routes$crud4.destroy) !== null && _$props$routes$crud4$ !== void 0 && _$props$routes$crud4$.bulk ? (vue.openBlock(), vue.createElementBlock("th", _hoisted_12)) : vue.createCommentVNode("", true), (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList($props.headers, function (header, headerIndex) {
+  }, "Delete selected", 10, _hoisted_9)], 32)])) : vue.createCommentVNode("", true)]), _ctx.notification.message != false ? (vue.openBlock(), vue.createElementBlock("div", {
+    key: 0,
+    class: vue.normalizeClass(["notification", {
+      hidden: !_ctx.notification.show,
+      show: _ctx.notification.show,
+      'notification-success': _ctx.notification.status == 200,
+      'notification-error': _ctx.notification.status !== 200
+    }])
+  }, [vue.createElementVNode("p", _hoisted_10, vue.toDisplayString(_ctx.notification.message), 1)], 2)) : vue.createCommentVNode("", true), vue.createElementVNode("table", _hoisted_11, [vue.createElementVNode("thead", null, [vue.createElementVNode("tr", null, [(_$props$routes$crud4 = $props.routes.crud) !== null && _$props$routes$crud4 !== void 0 && (_$props$routes$crud4$ = _$props$routes$crud4.destroy) !== null && _$props$routes$crud4$ !== void 0 && _$props$routes$crud4$.bulk ? (vue.openBlock(), vue.createElementBlock("th", _hoisted_12)) : vue.createCommentVNode("", true), (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList($props.headers, function (header, headerIndex) {
     return vue.openBlock(), vue.createElementBlock("th", {
       key: headerIndex
     }, [header.orderable ? (vue.openBlock(), vue.createElementBlock("a", {
@@ -17696,19 +17706,19 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   }), 128))], 2)]), _ctx.tableData.length > 0 && $props.show.includes('pagination') ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_26, [vue.createElementVNode("p", _hoisted_27, "Results: " + vue.toDisplayString(_ctx.paginationStatus.from) + " - " + vue.toDisplayString(_ctx.paginationStatus.to) + " of " + vue.toDisplayString(_ctx.paginationStatus.total), 1), vue.createElementVNode("ul", _hoisted_28, [(vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList(_ctx.paginationData, function (link, linkIndex) {
     return vue.openBlock(), vue.createElementBlock("li", {
       key: linkIndex,
-      class: vue.normalizeClass(["pagepagination-item", {
+      class: vue.normalizeClass(["pagination-item", {
         disabled: link.url == null,
         active: link.active
       }])
     }, [vue.createElementVNode("a", {
-      class: "pageination-link",
+      class: "pagination-link",
       "data-href": link.url,
       innerHTML: link.label,
       onClick: function onClick($event) {
         return link.url != null && $options.paginate($event);
       }
     }, null, 8, _hoisted_29)], 2);
-  }), 128))])])) : vue.createCommentVNode("", true)], 2)], 64);
+  }), 128))])])) : vue.createCommentVNode("", true)], 2);
 }script.render = render;// Import vue component
 // IIFE injects install function into component, allowing component
 // to be registered via Vue.use() as well as Vue.component(),

@@ -39,9 +39,10 @@ See example setup section for code examples.\
                         create: { name: 'users.create', icon: 'fas fa-plus' },
                         show: { name: 'users.show', icon: 'fas fa-eye' },
                         edit: { name: 'users.edit', icon: 'fas fa-edit' },
-                        destroy: { name: 'users.destroy', icon: 'fas fa-trash', bulk: true }
+                        destroy: { name: 'users.destroy', icon: 'fas fa-trash', bulk: true, confirm: 'Are you sure?' }
                     }
                 }"
+                :notification-timeout="500"
             />
         </div>
     </body>
@@ -158,6 +159,7 @@ class UserController extends Controller
 * * Required!
 * * Object containing all route names and icons for CRUD routes (see example).
 * * All icons are set at default, so no need to include default icons if you're not changing them to something else. The ones in the example are the default ones and can be removed from CRUD prop.
+* * The CRUD destroy route may also have a prop "confirm" wich should be a confirmation text you wish to display before deletion. If none are passed, no confirmation is checked before deletion.
 
 
 * `:headers`
@@ -181,9 +183,9 @@ class UserController extends Controller
 * * Array. This only has 3 options (search, pagination, limit). All is shown by default. Place in array only what you want to show.
 
 
-* `:notificationTimeout`
+* `:notification-timeout`
 * * Not required!
-* * Number. How long deletion notifications will be displayed in ms. Default value is 500ms.
+* * Number. How long deletion notifications will have class "show" before it gets the class "hidden" in ms. Default value is 500ms.
 
 
 ### Rendered
