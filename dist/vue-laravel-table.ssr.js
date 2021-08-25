@@ -17468,34 +17468,37 @@ var _ = lodash;var script = {
     destroy: function destroy(event, model) {
       var _this2 = this;
 
-      event.preventDefault(); // Confirmation text to be sure that the user
-      // wants to delete the model
+      event.preventDefault();
 
-      var confirmText = Array.isArray(model) ? 'Are you sure you want to delete the selected models' : 'Are you sure you want to delete this model?'; // Check if the model is an array of models or a simple
-      // model (integer)
+      if (this.routes.crud.destroy) {
+        // Confirmation text to be sure that the user
+        // wants to delete the model
+        var confirmText = Array.isArray(model) ? 'Are you sure you want to delete the selected models' : 'Are you sure you want to delete this model?'; // Check if the model is an array of models or a simple
+        // model (integer)
 
-      model = Array.isArray(model) ? model.map(function (v, k) {
-        return v;
-      }).join() : model; // Confirm action
+        model = Array.isArray(model) ? model.map(function (v, k) {
+          return v;
+        }).join() : model; // Confirm action
 
-      if (confirm(confirmText)) {
-        this.$axios.post(this.$route(this.routes.crud.destroy.name, model), {
-          _method: 'DELETE'
-        }).then(function (response) {
-          // Reset selected rows to an empty array
-          _this2.selectedIds = [];
-          var that = _this2;
-          _this2.notification.message = response.data.message;
-          _this2.notification.type = response.data.type;
-          _this2.notification.display = true;
-          setTimeout(function () {
-            that.notification.message, that.notification.type, that.notification.display = false;
-          }, that.notificationTimeout); // Refresh the table
+        if (confirm(confirmText)) {
+          this.$axios.post(this.$route(this.routes.crud.destroy.name, model), {
+            _method: 'DELETE'
+          }).then(function (response) {
+            // Reset selected rows to an empty array
+            _this2.selectedIds = [];
+            var that = _this2;
+            _this2.notification.message = response.data.message;
+            _this2.notification.type = response.data.type;
+            _this2.notification.display = true;
+            setTimeout(function () {
+              that.notification.message, that.notification.type, that.notification.display = false;
+            }, that.notificationTimeout); // Refresh the table
 
-          _this2.getResults();
-        }).catch(function (error) {
-          throw new Error(error);
-        });
+            _this2.getResults();
+          }).catch(function (error) {
+            throw new Error(error);
+          });
+        }
       }
     }
   }
@@ -17577,11 +17580,17 @@ var _hoisted_28 = {
 var _hoisted_29 = ["data-href", "innerHTML", "onClick"];
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _$props$routes$crud,
-      _$props$routes$crud$d,
       _$props$routes$crud2,
       _$props$routes$crud2$,
       _$props$routes$crud3,
       _$props$routes$crud3$,
+      _$props$routes$crud4,
+      _$props$routes$crud4$,
+      _$props$routes$crud5,
+      _$props$routes$crud6,
+      _$props$routes$crud7,
+      _$props$routes$crud8,
+      _$props$routes$crud8$,
       _this = this;
 
   return vue.openBlock(), vue.createElementBlock(vue.Fragment, null, [_ctx.notification.display == true ? (vue.openBlock(), vue.createElementBlock("div", {
@@ -17589,9 +17598,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     class: vue.normalizeClass(["notification", _ctx.notification.class])
   }, [vue.createElementVNode("p", _hoisted_1, vue.toDisplayString(_ctx.notification.message), 1)], 2)) : vue.createCommentVNode("", true), vue.createElementVNode("div", {
     class: vue.normalizeClass([$props.name, "table-container"])
-  }, [vue.createElementVNode("div", _hoisted_2, [$props.routes.crud.create ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_3, [vue.createElementVNode("a", {
+  }, [vue.createElementVNode("div", _hoisted_2, [(_$props$routes$crud = $props.routes.crud) !== null && _$props$routes$crud !== void 0 && _$props$routes$crud.create ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_3, [vue.createElementVNode("a", {
     href: this.$route($props.routes.crud.create.name)
-  }, [$props.routes.crud.create.icon ? (vue.openBlock(), vue.createElementBlock("i", {
+  }, [(_$props$routes$crud2 = $props.routes.crud) !== null && _$props$routes$crud2 !== void 0 && (_$props$routes$crud2$ = _$props$routes$crud2.create) !== null && _$props$routes$crud2$ !== void 0 && _$props$routes$crud2$.icon ? (vue.openBlock(), vue.createElementBlock("i", {
     key: 0,
     class: vue.normalizeClass($props.routes.crud.create.icon)
   }, null, 2)) : vue.createCommentVNode("", true), _hoisted_5], 8, _hoisted_4)])) : vue.createCommentVNode("", true), _ctx.searchable.length > 0 && $props.show.includes('search') ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_6, [vue.withDirectives(vue.createElementVNode("input", {
@@ -17610,7 +17619,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       key: value,
       value: value
     }, vue.toDisplayString(value), 9, _hoisted_8);
-  }), 128))], 512), [[vue.vModelSelect, _ctx.limit]])])) : vue.createCommentVNode("", true), (_$props$routes$crud = $props.routes.crud) !== null && _$props$routes$crud !== void 0 && (_$props$routes$crud$d = _$props$routes$crud.destroy) !== null && _$props$routes$crud$d !== void 0 && _$props$routes$crud$d.bulk ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_9, [vue.createElementVNode("form", {
+  }), 128))], 512), [[vue.vModelSelect, _ctx.limit]])])) : vue.createCommentVNode("", true), (_$props$routes$crud3 = $props.routes.crud) !== null && _$props$routes$crud3 !== void 0 && (_$props$routes$crud3$ = _$props$routes$crud3.destroy) !== null && _$props$routes$crud3$ !== void 0 && _$props$routes$crud3$.bulk ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_9, [vue.createElementVNode("form", {
     onSubmit: _cache[2] || (_cache[2] = function ($event) {
       return $options.destroy($event, _ctx.selectedIds);
     })
@@ -17620,7 +17629,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     class: vue.normalizeClass({
       disabled: _ctx.selectedIds.length <= 0
     })
-  }, "Delete selected", 10, _hoisted_10)], 32)])) : vue.createCommentVNode("", true)]), vue.createElementVNode("table", _hoisted_11, [vue.createElementVNode("thead", null, [vue.createElementVNode("tr", null, [(_$props$routes$crud2 = $props.routes.crud) !== null && _$props$routes$crud2 !== void 0 && (_$props$routes$crud2$ = _$props$routes$crud2.destroy) !== null && _$props$routes$crud2$ !== void 0 && _$props$routes$crud2$.bulk ? (vue.openBlock(), vue.createElementBlock("th", _hoisted_12)) : vue.createCommentVNode("", true), (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList($props.headers, function (header, headerIndex) {
+  }, "Delete selected", 10, _hoisted_10)], 32)])) : vue.createCommentVNode("", true)]), vue.createElementVNode("table", _hoisted_11, [vue.createElementVNode("thead", null, [vue.createElementVNode("tr", null, [(_$props$routes$crud4 = $props.routes.crud) !== null && _$props$routes$crud4 !== void 0 && (_$props$routes$crud4$ = _$props$routes$crud4.destroy) !== null && _$props$routes$crud4$ !== void 0 && _$props$routes$crud4$.bulk ? (vue.openBlock(), vue.createElementBlock("th", _hoisted_12)) : vue.createCommentVNode("", true), (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList($props.headers, function (header, headerIndex) {
     return vue.openBlock(), vue.createElementBlock("th", {
       key: headerIndex
     }, [header.orderable ? (vue.openBlock(), vue.createElementBlock("a", {
@@ -17636,11 +17645,11 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     }, vue.toDisplayString(header.display), 11, _hoisted_13)) : (vue.openBlock(), vue.createElementBlock(vue.Fragment, {
       key: 1
     }, [vue.createTextVNode(vue.toDisplayString(header.display), 1)], 64))]);
-  }), 128)), $props.routes.crud ? (vue.openBlock(), vue.createElementBlock("th", _hoisted_14, "Actions")) : vue.createCommentVNode("", true)])]), vue.createElementVNode("tbody", {
+  }), 128)), (_$props$routes$crud5 = $props.routes.crud) !== null && _$props$routes$crud5 !== void 0 && _$props$routes$crud5.edit || (_$props$routes$crud6 = $props.routes.crud) !== null && _$props$routes$crud6 !== void 0 && _$props$routes$crud6.show || (_$props$routes$crud7 = $props.routes.crud) !== null && _$props$routes$crud7 !== void 0 && _$props$routes$crud7.destroy ? (vue.openBlock(), vue.createElementBlock("th", _hoisted_14, "Actions")) : vue.createCommentVNode("", true)])]), vue.createElementVNode("tbody", {
     class: vue.normalizeClass({
       loading: _ctx.loading
     })
-  }, [_ctx.tableData.length <= 0 ? (vue.openBlock(), vue.createElementBlock("tr", _hoisted_15, [(_$props$routes$crud3 = $props.routes.crud) !== null && _$props$routes$crud3 !== void 0 && (_$props$routes$crud3$ = _$props$routes$crud3.destroy) !== null && _$props$routes$crud3$ !== void 0 && _$props$routes$crud3$.bulk ? (vue.openBlock(), vue.createElementBlock("td", _hoisted_16)) : vue.createCommentVNode("", true), (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList($props.headers, function (header, headerIndex) {
+  }, [_ctx.tableData.length <= 0 ? (vue.openBlock(), vue.createElementBlock("tr", _hoisted_15, [(_$props$routes$crud8 = $props.routes.crud) !== null && _$props$routes$crud8 !== void 0 && (_$props$routes$crud8$ = _$props$routes$crud8.destroy) !== null && _$props$routes$crud8$ !== void 0 && _$props$routes$crud8$.bulk ? (vue.openBlock(), vue.createElementBlock("td", _hoisted_16)) : vue.createCommentVNode("", true), (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList($props.headers, function (header, headerIndex) {
     return vue.openBlock(), vue.createElementBlock("td", {
       key: headerIndex
     }, [headerIndex == 0 ? (vue.openBlock(), vue.createElementBlock(vue.Fragment, {
@@ -17649,11 +17658,11 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   }), 128)), $props.routes.crud ? (vue.openBlock(), vue.createElementBlock("td", _hoisted_18)) : vue.createCommentVNode("", true)])) : (vue.openBlock(true), vue.createElementBlock(vue.Fragment, {
     key: 1
   }, vue.renderList(_ctx.tableData, function (row, rowIndex) {
-    var _$props$routes$crud4, _$props$routes$crud4$;
+    var _$props$routes$crud9, _$props$routes$crud9$, _$props$routes$crud10, _$props$routes$crud11, _$props$routes$crud12, _$props$routes$crud13, _$props$routes$crud$s, _$props$routes$crud14, _$props$routes$crud15, _$props$routes$crud16, _$props$routes$crud$e, _$props$routes$crud17, _$props$routes$crud18, _$props$routes$crud19, _$props$routes$crud$d, _$props$routes$crud20, _$props$routes$crud21;
 
     return vue.openBlock(), vue.createElementBlock("tr", {
       key: rowIndex
-    }, [(_$props$routes$crud4 = $props.routes.crud) !== null && _$props$routes$crud4 !== void 0 && (_$props$routes$crud4$ = _$props$routes$crud4.destroy) !== null && _$props$routes$crud4$ !== void 0 && _$props$routes$crud4$.bulk ? (vue.openBlock(), vue.createElementBlock("td", _hoisted_19, [vue.withDirectives(vue.createElementVNode("input", {
+    }, [(_$props$routes$crud9 = $props.routes.crud) !== null && _$props$routes$crud9 !== void 0 && (_$props$routes$crud9$ = _$props$routes$crud9.destroy) !== null && _$props$routes$crud9$ !== void 0 && _$props$routes$crud9$.bulk ? (vue.openBlock(), vue.createElementBlock("td", _hoisted_19, [vue.withDirectives(vue.createElementVNode("input", {
       type: "checkbox",
       value: row.id,
       "onUpdate:modelValue": _cache[3] || (_cache[3] = function ($event) {
@@ -17663,26 +17672,26 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       return vue.openBlock(), vue.createElementBlock("td", {
         key: column
       }, vue.toDisplayString(columnData), 1);
-    }), 128)), $props.routes.crud ? (vue.openBlock(), vue.createElementBlock("td", _hoisted_21, [$props.routes.crud.show ? (vue.openBlock(), vue.createElementBlock("a", {
+    }), 128)), (_$props$routes$crud10 = $props.routes.crud) !== null && _$props$routes$crud10 !== void 0 && _$props$routes$crud10.edit || (_$props$routes$crud11 = $props.routes.crud) !== null && _$props$routes$crud11 !== void 0 && _$props$routes$crud11.show || (_$props$routes$crud12 = $props.routes.crud) !== null && _$props$routes$crud12 !== void 0 && _$props$routes$crud12.destroy ? (vue.openBlock(), vue.createElementBlock("td", _hoisted_21, [(_$props$routes$crud13 = $props.routes.crud) !== null && _$props$routes$crud13 !== void 0 && _$props$routes$crud13.show ? (vue.openBlock(), vue.createElementBlock("a", {
       key: 0,
       href: _this.$route($props.routes.crud.show.name, row.id),
       class: "row-action row-action-show"
     }, [vue.createElementVNode("i", {
-      class: vue.normalizeClass($props.routes.crud.show.icon)
-    }, null, 2)], 8, _hoisted_22)) : vue.createCommentVNode("", true), $props.routes.crud.edit ? (vue.openBlock(), vue.createElementBlock("a", {
+      class: vue.normalizeClass((_$props$routes$crud$s = (_$props$routes$crud14 = $props.routes.crud) === null || _$props$routes$crud14 === void 0 ? void 0 : (_$props$routes$crud15 = _$props$routes$crud14.show) === null || _$props$routes$crud15 === void 0 ? void 0 : _$props$routes$crud15.icon) !== null && _$props$routes$crud$s !== void 0 ? _$props$routes$crud$s : 'fas fa-fw fa-eye')
+    }, null, 2)], 8, _hoisted_22)) : vue.createCommentVNode("", true), (_$props$routes$crud16 = $props.routes.crud) !== null && _$props$routes$crud16 !== void 0 && _$props$routes$crud16.edit ? (vue.openBlock(), vue.createElementBlock("a", {
       key: 1,
       href: _this.$route($props.routes.crud.edit.name, row.id),
       class: "row-action row-action-edit"
     }, [vue.createElementVNode("i", {
-      class: vue.normalizeClass($props.routes.crud.edit.icon)
-    }, null, 2)], 8, _hoisted_23)) : vue.createCommentVNode("", true), $props.routes.crud.destroy.name ? (vue.openBlock(), vue.createElementBlock("form", {
+      class: vue.normalizeClass((_$props$routes$crud$e = (_$props$routes$crud17 = $props.routes.crud) === null || _$props$routes$crud17 === void 0 ? void 0 : (_$props$routes$crud18 = _$props$routes$crud17.edit) === null || _$props$routes$crud18 === void 0 ? void 0 : _$props$routes$crud18.icon) !== null && _$props$routes$crud$e !== void 0 ? _$props$routes$crud$e : 'fas fa-fw fa-edit')
+    }, null, 2)], 8, _hoisted_23)) : vue.createCommentVNode("", true), (_$props$routes$crud19 = $props.routes.crud) !== null && _$props$routes$crud19 !== void 0 && _$props$routes$crud19.destroy ? (vue.openBlock(), vue.createElementBlock("form", {
       key: 2,
       onSubmit: function onSubmit($event) {
         return $options.destroy($event, row.id);
       },
       class: "row-action row-action-delete"
     }, [vue.createElementVNode("button", _hoisted_25, [vue.createElementVNode("i", {
-      class: vue.normalizeClass($props.routes.crud.destroy.icon)
+      class: vue.normalizeClass((_$props$routes$crud$d = (_$props$routes$crud20 = $props.routes.crud) === null || _$props$routes$crud20 === void 0 ? void 0 : (_$props$routes$crud21 = _$props$routes$crud20.destroy) === null || _$props$routes$crud21 === void 0 ? void 0 : _$props$routes$crud21.icon) !== null && _$props$routes$crud$d !== void 0 ? _$props$routes$crud$d : 'fas fa-fw fa-trash')
     }, null, 2)])], 40, _hoisted_24)) : vue.createCommentVNode("", true)])) : vue.createCommentVNode("", true)]);
   }), 128))], 2)]), _ctx.tableData.length > 0 && $props.show.includes('pagination') ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_26, [vue.createElementVNode("p", _hoisted_27, "Results: " + vue.toDisplayString(_ctx.paginationStatus.from) + " - " + vue.toDisplayString(_ctx.paginationStatus.to) + " of " + vue.toDisplayString(_ctx.paginationStatus.total), 1), vue.createElementVNode("ul", _hoisted_28, [(vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList(_ctx.paginationData, function (link, linkIndex) {
     return vue.openBlock(), vue.createElementBlock("li", {

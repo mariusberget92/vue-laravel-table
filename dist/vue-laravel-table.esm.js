@@ -17414,34 +17414,37 @@ var script = {
 
     // Simple delete method
     destroy(event, model) {
-      event.preventDefault(); // Confirmation text to be sure that the user
-      // wants to delete the model
+      event.preventDefault();
 
-      let confirmText = Array.isArray(model) ? 'Are you sure you want to delete the selected models' : 'Are you sure you want to delete this model?'; // Check if the model is an array of models or a simple
-      // model (integer)
+      if (this.routes.crud.destroy) {
+        // Confirmation text to be sure that the user
+        // wants to delete the model
+        let confirmText = Array.isArray(model) ? 'Are you sure you want to delete the selected models' : 'Are you sure you want to delete this model?'; // Check if the model is an array of models or a simple
+        // model (integer)
 
-      model = Array.isArray(model) ? model.map((v, k) => {
-        return v;
-      }).join() : model; // Confirm action
+        model = Array.isArray(model) ? model.map((v, k) => {
+          return v;
+        }).join() : model; // Confirm action
 
-      if (confirm(confirmText)) {
-        this.$axios.post(this.$route(this.routes.crud.destroy.name, model), {
-          _method: 'DELETE'
-        }).then(response => {
-          // Reset selected rows to an empty array
-          this.selectedIds = [];
-          var that = this;
-          this.notification.message = response.data.message;
-          this.notification.type = response.data.type;
-          this.notification.display = true;
-          setTimeout(() => {
-            that.notification.message, that.notification.type, that.notification.display = false;
-          }, that.notificationTimeout); // Refresh the table
+        if (confirm(confirmText)) {
+          this.$axios.post(this.$route(this.routes.crud.destroy.name, model), {
+            _method: 'DELETE'
+          }).then(response => {
+            // Reset selected rows to an empty array
+            this.selectedIds = [];
+            var that = this;
+            this.notification.message = response.data.message;
+            this.notification.type = response.data.type;
+            this.notification.display = true;
+            setTimeout(() => {
+              that.notification.message, that.notification.type, that.notification.display = false;
+            }, that.notificationTimeout); // Refresh the table
 
-          this.getResults();
-        }).catch(error => {
-          throw new Error(error);
-        });
+            this.getResults();
+          }).catch(error => {
+            throw new Error(error);
+          });
+        }
       }
     }
 
@@ -17525,16 +17528,16 @@ const _hoisted_28 = {
 };
 const _hoisted_29 = ["data-href", "innerHTML", "onClick"];
 function render(_ctx, _cache, $props, $setup, $data, $options) {
-  var _$props$routes$crud, _$props$routes$crud$d, _$props$routes$crud2, _$props$routes$crud2$, _$props$routes$crud3, _$props$routes$crud3$;
+  var _$props$routes$crud, _$props$routes$crud2, _$props$routes$crud2$, _$props$routes$crud3, _$props$routes$crud3$, _$props$routes$crud4, _$props$routes$crud4$, _$props$routes$crud5, _$props$routes$crud6, _$props$routes$crud7, _$props$routes$crud8, _$props$routes$crud8$;
 
   return openBlock(), createElementBlock(Fragment, null, [_ctx.notification.display == true ? (openBlock(), createElementBlock("div", {
     key: 0,
     class: normalizeClass(["notification", _ctx.notification.class])
   }, [createElementVNode("p", _hoisted_1, toDisplayString(_ctx.notification.message), 1)], 2)) : createCommentVNode("", true), createElementVNode("div", {
     class: normalizeClass([$props.name, "table-container"])
-  }, [createElementVNode("div", _hoisted_2, [$props.routes.crud.create ? (openBlock(), createElementBlock("div", _hoisted_3, [createElementVNode("a", {
+  }, [createElementVNode("div", _hoisted_2, [(_$props$routes$crud = $props.routes.crud) !== null && _$props$routes$crud !== void 0 && _$props$routes$crud.create ? (openBlock(), createElementBlock("div", _hoisted_3, [createElementVNode("a", {
     href: this.$route($props.routes.crud.create.name)
-  }, [$props.routes.crud.create.icon ? (openBlock(), createElementBlock("i", {
+  }, [(_$props$routes$crud2 = $props.routes.crud) !== null && _$props$routes$crud2 !== void 0 && (_$props$routes$crud2$ = _$props$routes$crud2.create) !== null && _$props$routes$crud2$ !== void 0 && _$props$routes$crud2$.icon ? (openBlock(), createElementBlock("i", {
     key: 0,
     class: normalizeClass($props.routes.crud.create.icon)
   }, null, 2)) : createCommentVNode("", true), _hoisted_5], 8, _hoisted_4)])) : createCommentVNode("", true), _ctx.searchable.length > 0 && $props.show.includes('search') ? (openBlock(), createElementBlock("div", _hoisted_6, [withDirectives(createElementVNode("input", {
@@ -17549,7 +17552,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       key: value,
       value: value
     }, toDisplayString(value), 9, _hoisted_8);
-  }), 128))], 512), [[vModelSelect, _ctx.limit]])])) : createCommentVNode("", true), (_$props$routes$crud = $props.routes.crud) !== null && _$props$routes$crud !== void 0 && (_$props$routes$crud$d = _$props$routes$crud.destroy) !== null && _$props$routes$crud$d !== void 0 && _$props$routes$crud$d.bulk ? (openBlock(), createElementBlock("div", _hoisted_9, [createElementVNode("form", {
+  }), 128))], 512), [[vModelSelect, _ctx.limit]])])) : createCommentVNode("", true), (_$props$routes$crud3 = $props.routes.crud) !== null && _$props$routes$crud3 !== void 0 && (_$props$routes$crud3$ = _$props$routes$crud3.destroy) !== null && _$props$routes$crud3$ !== void 0 && _$props$routes$crud3$.bulk ? (openBlock(), createElementBlock("div", _hoisted_9, [createElementVNode("form", {
     onSubmit: _cache[2] || (_cache[2] = $event => $options.destroy($event, _ctx.selectedIds))
   }, [createElementVNode("button", {
     disabled: _ctx.selectedIds.length <= 0,
@@ -17557,7 +17560,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     class: normalizeClass({
       disabled: _ctx.selectedIds.length <= 0
     })
-  }, "Delete selected", 10, _hoisted_10)], 32)])) : createCommentVNode("", true)]), createElementVNode("table", _hoisted_11, [createElementVNode("thead", null, [createElementVNode("tr", null, [(_$props$routes$crud2 = $props.routes.crud) !== null && _$props$routes$crud2 !== void 0 && (_$props$routes$crud2$ = _$props$routes$crud2.destroy) !== null && _$props$routes$crud2$ !== void 0 && _$props$routes$crud2$.bulk ? (openBlock(), createElementBlock("th", _hoisted_12)) : createCommentVNode("", true), (openBlock(true), createElementBlock(Fragment, null, renderList($props.headers, (header, headerIndex) => {
+  }, "Delete selected", 10, _hoisted_10)], 32)])) : createCommentVNode("", true)]), createElementVNode("table", _hoisted_11, [createElementVNode("thead", null, [createElementVNode("tr", null, [(_$props$routes$crud4 = $props.routes.crud) !== null && _$props$routes$crud4 !== void 0 && (_$props$routes$crud4$ = _$props$routes$crud4.destroy) !== null && _$props$routes$crud4$ !== void 0 && _$props$routes$crud4$.bulk ? (openBlock(), createElementBlock("th", _hoisted_12)) : createCommentVNode("", true), (openBlock(true), createElementBlock(Fragment, null, renderList($props.headers, (header, headerIndex) => {
     return openBlock(), createElementBlock("th", {
       key: headerIndex
     }, [header.orderable ? (openBlock(), createElementBlock("a", {
@@ -17571,11 +17574,11 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     }, toDisplayString(header.display), 11, _hoisted_13)) : (openBlock(), createElementBlock(Fragment, {
       key: 1
     }, [createTextVNode(toDisplayString(header.display), 1)], 64))]);
-  }), 128)), $props.routes.crud ? (openBlock(), createElementBlock("th", _hoisted_14, "Actions")) : createCommentVNode("", true)])]), createElementVNode("tbody", {
+  }), 128)), (_$props$routes$crud5 = $props.routes.crud) !== null && _$props$routes$crud5 !== void 0 && _$props$routes$crud5.edit || (_$props$routes$crud6 = $props.routes.crud) !== null && _$props$routes$crud6 !== void 0 && _$props$routes$crud6.show || (_$props$routes$crud7 = $props.routes.crud) !== null && _$props$routes$crud7 !== void 0 && _$props$routes$crud7.destroy ? (openBlock(), createElementBlock("th", _hoisted_14, "Actions")) : createCommentVNode("", true)])]), createElementVNode("tbody", {
     class: normalizeClass({
       loading: _ctx.loading
     })
-  }, [_ctx.tableData.length <= 0 ? (openBlock(), createElementBlock("tr", _hoisted_15, [(_$props$routes$crud3 = $props.routes.crud) !== null && _$props$routes$crud3 !== void 0 && (_$props$routes$crud3$ = _$props$routes$crud3.destroy) !== null && _$props$routes$crud3$ !== void 0 && _$props$routes$crud3$.bulk ? (openBlock(), createElementBlock("td", _hoisted_16)) : createCommentVNode("", true), (openBlock(true), createElementBlock(Fragment, null, renderList($props.headers, (header, headerIndex) => {
+  }, [_ctx.tableData.length <= 0 ? (openBlock(), createElementBlock("tr", _hoisted_15, [(_$props$routes$crud8 = $props.routes.crud) !== null && _$props$routes$crud8 !== void 0 && (_$props$routes$crud8$ = _$props$routes$crud8.destroy) !== null && _$props$routes$crud8$ !== void 0 && _$props$routes$crud8$.bulk ? (openBlock(), createElementBlock("td", _hoisted_16)) : createCommentVNode("", true), (openBlock(true), createElementBlock(Fragment, null, renderList($props.headers, (header, headerIndex) => {
     return openBlock(), createElementBlock("td", {
       key: headerIndex
     }, [headerIndex == 0 ? (openBlock(), createElementBlock(Fragment, {
@@ -17584,11 +17587,11 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   }), 128)), $props.routes.crud ? (openBlock(), createElementBlock("td", _hoisted_18)) : createCommentVNode("", true)])) : (openBlock(true), createElementBlock(Fragment, {
     key: 1
   }, renderList(_ctx.tableData, (row, rowIndex) => {
-    var _$props$routes$crud4, _$props$routes$crud4$;
+    var _$props$routes$crud9, _$props$routes$crud9$, _$props$routes$crud10, _$props$routes$crud11, _$props$routes$crud12, _$props$routes$crud13, _$props$routes$crud14, _$props$routes$crud15, _$props$routes$crud16, _$props$routes$crud17, _$props$routes$crud18, _$props$routes$crud19, _$props$routes$crud20, _$props$routes$crud21;
 
     return openBlock(), createElementBlock("tr", {
       key: rowIndex
-    }, [(_$props$routes$crud4 = $props.routes.crud) !== null && _$props$routes$crud4 !== void 0 && (_$props$routes$crud4$ = _$props$routes$crud4.destroy) !== null && _$props$routes$crud4$ !== void 0 && _$props$routes$crud4$.bulk ? (openBlock(), createElementBlock("td", _hoisted_19, [withDirectives(createElementVNode("input", {
+    }, [(_$props$routes$crud9 = $props.routes.crud) !== null && _$props$routes$crud9 !== void 0 && (_$props$routes$crud9$ = _$props$routes$crud9.destroy) !== null && _$props$routes$crud9$ !== void 0 && _$props$routes$crud9$.bulk ? (openBlock(), createElementBlock("td", _hoisted_19, [withDirectives(createElementVNode("input", {
       type: "checkbox",
       value: row.id,
       "onUpdate:modelValue": _cache[3] || (_cache[3] = $event => _ctx.selectedIds = $event)
@@ -17596,24 +17599,24 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       return openBlock(), createElementBlock("td", {
         key: column
       }, toDisplayString(columnData), 1);
-    }), 128)), $props.routes.crud ? (openBlock(), createElementBlock("td", _hoisted_21, [$props.routes.crud.show ? (openBlock(), createElementBlock("a", {
+    }), 128)), (_$props$routes$crud10 = $props.routes.crud) !== null && _$props$routes$crud10 !== void 0 && _$props$routes$crud10.edit || (_$props$routes$crud11 = $props.routes.crud) !== null && _$props$routes$crud11 !== void 0 && _$props$routes$crud11.show || (_$props$routes$crud12 = $props.routes.crud) !== null && _$props$routes$crud12 !== void 0 && _$props$routes$crud12.destroy ? (openBlock(), createElementBlock("td", _hoisted_21, [(_$props$routes$crud13 = $props.routes.crud) !== null && _$props$routes$crud13 !== void 0 && _$props$routes$crud13.show ? (openBlock(), createElementBlock("a", {
       key: 0,
       href: this.$route($props.routes.crud.show.name, row.id),
       class: "row-action row-action-show"
     }, [createElementVNode("i", {
-      class: normalizeClass($props.routes.crud.show.icon)
-    }, null, 2)], 8, _hoisted_22)) : createCommentVNode("", true), $props.routes.crud.edit ? (openBlock(), createElementBlock("a", {
+      class: normalizeClass(((_$props$routes$crud14 = $props.routes.crud) === null || _$props$routes$crud14 === void 0 ? void 0 : (_$props$routes$crud15 = _$props$routes$crud14.show) === null || _$props$routes$crud15 === void 0 ? void 0 : _$props$routes$crud15.icon) ?? 'fas fa-fw fa-eye')
+    }, null, 2)], 8, _hoisted_22)) : createCommentVNode("", true), (_$props$routes$crud16 = $props.routes.crud) !== null && _$props$routes$crud16 !== void 0 && _$props$routes$crud16.edit ? (openBlock(), createElementBlock("a", {
       key: 1,
       href: this.$route($props.routes.crud.edit.name, row.id),
       class: "row-action row-action-edit"
     }, [createElementVNode("i", {
-      class: normalizeClass($props.routes.crud.edit.icon)
-    }, null, 2)], 8, _hoisted_23)) : createCommentVNode("", true), $props.routes.crud.destroy.name ? (openBlock(), createElementBlock("form", {
+      class: normalizeClass(((_$props$routes$crud17 = $props.routes.crud) === null || _$props$routes$crud17 === void 0 ? void 0 : (_$props$routes$crud18 = _$props$routes$crud17.edit) === null || _$props$routes$crud18 === void 0 ? void 0 : _$props$routes$crud18.icon) ?? 'fas fa-fw fa-edit')
+    }, null, 2)], 8, _hoisted_23)) : createCommentVNode("", true), (_$props$routes$crud19 = $props.routes.crud) !== null && _$props$routes$crud19 !== void 0 && _$props$routes$crud19.destroy ? (openBlock(), createElementBlock("form", {
       key: 2,
       onSubmit: $event => $options.destroy($event, row.id),
       class: "row-action row-action-delete"
     }, [createElementVNode("button", _hoisted_25, [createElementVNode("i", {
-      class: normalizeClass($props.routes.crud.destroy.icon)
+      class: normalizeClass(((_$props$routes$crud20 = $props.routes.crud) === null || _$props$routes$crud20 === void 0 ? void 0 : (_$props$routes$crud21 = _$props$routes$crud20.destroy) === null || _$props$routes$crud21 === void 0 ? void 0 : _$props$routes$crud21.icon) ?? 'fas fa-fw fa-trash')
     }, null, 2)])], 40, _hoisted_24)) : createCommentVNode("", true)])) : createCommentVNode("", true)]);
   }), 128))], 2)]), _ctx.tableData.length > 0 && $props.show.includes('pagination') ? (openBlock(), createElementBlock("div", _hoisted_26, [createElementVNode("p", _hoisted_27, "Results: " + toDisplayString(_ctx.paginationStatus.from) + " - " + toDisplayString(_ctx.paginationStatus.to) + " of " + toDisplayString(_ctx.paginationStatus.total), 1), createElementVNode("ul", _hoisted_28, [(openBlock(true), createElementBlock(Fragment, null, renderList(_ctx.paginationData, (link, linkIndex) => {
     return openBlock(), createElementBlock("li", {
